@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(nfc-bindings C)
 
-# find_package(LibNFC NO_MODULE REQUIRED)
-# include(${LIBNFC_USE_FILE})
-set (LIBNFC_LIBRARIES "/home/xantares/projects/libnfc/build/install/lib/libnfc.so;/usr/lib/libusb.so")
-include_directories("/home/xantares/projects/libnfc/build/install/include/")
+list ( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
+
+
+find_package(LibNFC REQUIRED)
+include_directories(${LIBNFC_INCLUDE_DIRS})
 
 option ( PYTHON_BINDINGS "Build python bindings via swig" ON )
 if(PYTHON_BINDINGS)
