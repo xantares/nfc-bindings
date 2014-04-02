@@ -97,6 +97,33 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 //%delobject nfc_close;
 
 
+%define nfc_initiator_transceive_bytes_docstring
+"initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (szRxBits, pbtRx)"
+%enddef
+%feature("autodoc", nfc_initiator_transceive_bytes_docstring) nfc_initiator_transceive_bytes;
+int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
+
+
+%define nfc_initiator_transceive_bits_docstring
+"initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (pbtRx, pbtRxPar)"
+%enddef
+%feature("autodoc", nfc_initiator_transceive_bits_docstring) nfc_initiator_transceive_bits;
+int nfc_initiator_transceive_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
+
+
+%define nfc_initiator_transceive_bytes_timed_docstring
+"initiator_transceive_bytes_timed(pnd, pbtTx, szTx, szRx) -> (szRxBits, pbtRx, cycles)"
+%enddef
+%feature("autodoc", nfc_initiator_transceive_bytes_timed_docstring) nfc_initiator_transceive_bytes_timed;
+int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
+
+
+%define nfc_initiator_transceive_bits_timed_docstring
+"initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (szRxBits, pbtRx, cycles)"
+%enddef
+%feature("autodoc", nfc_initiator_transceive_bits_timed_docstring) nfc_initiator_transceive_bits_timed;
+int nfc_initiator_transceive_bits_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar, uint32_t *cycles);
+
 
 %include nfc/nfc-types.h
 %{
@@ -110,4 +137,39 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 
 %pythoncode %{
 __version__ = version()
+
+import sys
+
+
+def convBytes(pData):
+    if sys.version_info[0] < 3:  # python 2
+        byt = ord(pData)
+    else:
+        byt = pData
+    return byt
+
+def print_hex(pbtData, szBytes):
+    for szPos in range(szBytes):
+        print("%02x  " % convBytes(pbtData[szPos]), end="")
+    print('')
+    
+def print_hex_bits(pbtData, szBits):
+
+    szBytes = divmod(szBits, 8)[0]
+    for szPos in range(szBytes):
+        print("%02x  " % convBytes(pbtData[szPos]), end="")
+
+    uRemainder = szBits % 8
+    # Print the rest bits
+    if (uRemainder != 0):
+        if (uRemainder < 5):
+            print("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder), end="")
+        else:
+            print("%02x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder), end="")
+      
+    print('')
+
+    
+    
+    
 %}
