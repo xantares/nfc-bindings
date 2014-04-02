@@ -24,6 +24,14 @@
 %typemap(out) uint8_t abtUid[10] %{ $result = toPyBytesSize($1, 10); %}
 %typemap(out) uint8_t abtAts[254] %{ $result = toPyBytesSize($1, 254); %}
 
+
+
+
+
+
+
+
+
 %define nfc_init_docstring
 "init() -> context
 
@@ -101,6 +109,11 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 "initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (szRxBits, pbtRx)"
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_docstring) nfc_initiator_transceive_bytes;
+%typemap(in,numinputs=1) (uint8_t *pbtRx, const size_t szRx) %{
+  $2 = fromPyInt($input);
+  $1 = (uint8_t *)malloc($2 * sizeof(uint8_t *)); 
+%}
+%apply SWIGTYPE** OUTPUT { uint8_t *pbtRx };
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
 
@@ -161,7 +174,7 @@ def print_hex_bits(pbtData, szBits):
 
     uRemainder = szBits % 8
     # Print the rest bits
-    if (uRemainder != 0):
+    if uRemainder != 0:
         if (uRemainder < 5):
             print("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder), end="")
         else:
