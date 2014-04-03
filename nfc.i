@@ -168,22 +168,21 @@ def convBytes(pData):
 
 def print_hex(pbtData, szBytes):
     for szPos in range(szBytes):
-        print("%02x  " % convBytes(pbtData[szPos]), end="")
+        sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
     print('')
     
 def print_hex_bits(pbtData, szBits):
 
     szBytes = divmod(szBits, 8)[0]
     for szPos in range(szBytes):
-        print("%02x  " % convBytes(pbtData[szPos]), end="")
-
+        sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
     uRemainder = szBits % 8
     # Print the rest bits
     if uRemainder != 0:
         if (uRemainder < 5):
-            print("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder), end="")
+            sys.stdout.write("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
         else:
-            print("%02x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder), end="")
+            sys.stdout.write("%02x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
       
     print('')
 
