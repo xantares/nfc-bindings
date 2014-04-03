@@ -32,7 +32,7 @@
 
 
 
-%define nfc_init_docstring
+%define nfc_init_doc
 "init() -> context
 
 
@@ -40,7 +40,7 @@ Returns
 =======
   context: the initialized nfc context"
 %enddef
-%feature("autodoc", nfc_init_docstring) nfc_init;
+%feature("autodoc", nfc_init_doc) nfc_init;
 //%newobject nfc_init;
 %typemap(in,numinputs=0) SWIGTYPE** OUTPUT ($*ltype temp) %{ $1 = &temp; %}
 %typemap(argout) SWIGTYPE** OUTPUT %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((void*)*$1,$*descriptor,0)); %}
@@ -49,21 +49,21 @@ Returns
 %clear nfc_context **context;
 %typemap(newfree) nfc_context * "nfc_exit($1);";
 
-%define nfc_exit_docstring
+%define nfc_exit_doc
 "exit(context)
 
 Parameter
 =========
   context: nfc_context"
 %enddef
-%feature("autodoc", nfc_exit_docstring) nfc_exit;
+%feature("autodoc", nfc_exit_doc) nfc_exit;
 //%delobject nfc_exit;
 
 
-%define nfc_open_docstring
+%define nfc_open_doc
 "open(context, connstring) -> (ret, device)"
 %enddef
-%feature("autodoc", nfc_open_docstring) nfc_open;
+%feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
 %typemap(out) nfc_device * %{
   $result = SWIG_Python_AppendOutput(PyInt_FromLong($1!=NULL?0:-1), SWIG_NewPointerObj((void*)$1,$descriptor,0));
@@ -80,6 +80,7 @@ Parameter
   }
 %}
 nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
+%clear nfc_device *;
 
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
@@ -98,44 +99,48 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 //int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
 //%clear nfc_target *pnt;
 
-//%define nfc_close_docstring
+//%define nfc_close_doc
 //"close(device)"
 //%enddef
-//%feature("autodoc", nfc_close_docstring) nfc_close;
+//%feature("autodoc", nfc_close_doc) nfc_close;
 //%delobject nfc_close;
 
 
-%define nfc_initiator_transceive_bytes_docstring
+%define nfc_initiator_transceive_bytes_doc
 "initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (szRxBits, pbtRx)"
 %enddef
-%feature("autodoc", nfc_initiator_transceive_bytes_docstring) nfc_initiator_transceive_bytes;
-%typemap(in,numinputs=1) (uint8_t *pbtRx, const size_t szRx) %{
-  $2 = fromPyInt($input);
-  $1 = (uint8_t *)malloc($2 * sizeof(uint8_t *)); 
-%}
-%apply SWIGTYPE** OUTPUT { uint8_t *pbtRx };
+%feature("autodoc", nfc_initiator_transceive_bytes_doc) nfc_initiator_transceive_bytes;
+%typemap(in,numinputs=1) (uint8_t *pbtRx, const size_t szRx) %{ $2 = PyInt_AsLong($input);$1 = (uint8_t *)calloc($2,sizeof(uint8_t)); %}
+%typemap(argout) (uint8_t *pbtRx, const size_t szRx) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, toPyBytesSize((uint8_t *)$1, $2)); free($1); %}
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
 
-%define nfc_initiator_transceive_bits_docstring
+%define nfc_initiator_transceive_bits_doc
 "initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (pbtRx, pbtRxPar)"
 %enddef
-%feature("autodoc", nfc_initiator_transceive_bits_docstring) nfc_initiator_transceive_bits;
+%feature("autodoc", nfc_initiator_transceive_bits_doc) nfc_initiator_transceive_bits;
+%apply (uint8_t *pbtRx, const size_t szRx) { (uint8_t *pbtRx, const size_t szTxBits) }; 
 int nfc_initiator_transceive_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
 
-
-%define nfc_initiator_transceive_bytes_timed_docstring
+%define nfc_initiator_transceive_bytes_timed_doc
 "initiator_transceive_bytes_timed(pnd, pbtTx, szTx, szRx) -> (szRxBits, pbtRx, cycles)"
 %enddef
-%feature("autodoc", nfc_initiator_transceive_bytes_timed_docstring) nfc_initiator_transceive_bytes_timed;
+%feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
 int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
 
 
-%define nfc_initiator_transceive_bits_timed_docstring
+%define nfc_initiator_transceive_bits_timed_doc
 "initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (szRxBits, pbtRx, cycles)"
 %enddef
-%feature("autodoc", nfc_initiator_transceive_bits_timed_docstring) nfc_initiator_transceive_bits_timed;
+%feature("autodoc", nfc_initiator_transceive_bits_timed_doc) nfc_initiator_transceive_bits_timed;
 int nfc_initiator_transceive_bits_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar, uint32_t *cycles);
+
+%define nfc_target_receive_bits_doc
+"nfc_target_receive_bits(pnd, pbtTx, szRx, pbtRxPar, szRx) -> (szRxBits, pbtRx)"
+%enddef
+%feature("autodoc", nfc_target_receive_bits_doc) nfc_target_receive_bits;
+int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
+%clear (uint8_t *pbtRx, const size_t szRx);
 
 
 %include nfc/nfc-types.h
@@ -182,7 +187,4 @@ def print_hex_bits(pbtData, szBits):
       
     print('')
 
-    
-    
-    
 %}

@@ -42,27 +42,54 @@ def transmit_bits(pbtTx, szTxBits):
     
     # Transmit the bit frame command, we don't use the arbitrary parity feature
     if timed:
-        szRxBits, pbtRx, cycles = nfc.initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, 0, abtRx, len(abtRx), 0 )
+        szRxBits, pbtRx, cycles = nfc.initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, 0, len(abtRx), 0 )
         if szRxBits < 0:
             return False
         if (not quiet_output) and (szRxBits > 0):
             print("Response after %u cycles" % cycles)
         
     else:
-        szRxBits, pbtRx = nfc.initiator_transceive_bits(pnd, pbtTx, szTxBits, 0, abtRx, 0)
+        szRxBits, pbtRx = nfc.initiator_transceive_bits(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN,  0)
         if szRxBits < 0:
             return False
     
     # Show received answer
     if not quiet_output:
-        print('Received bits: ')
-        nfc.print_hex_bits(abtRx, szRxBits)
+        print('Received bits: ', end='')
+        nfc.print_hex_bits(pbtRx, szRxBits)
     
     # Succesful transfer
-    return True
+    return pbtRx
 
 
-
+def transmit_bytes(pbtTx, szTx):
+  
+    cycles = 0
+    # Show transmitted command
+    if not quiet_output:
+        print('Sent bits:     ', end='')
+        nfc.print_hex(pbtTx, szTx)
+    
+    # Transmit the bit frame command, we don't use the arbitrary parity feature
+    if timed:
+        szRx, pbtRx, cycles = nfc.initiator_transceive_bytes_timed(pnd, pbtTx, szTx, 0, abtRx, len(abtRx), 0 )
+        if szRx < 0:
+            return False
+        if (not quiet_output) and (szRx > 0):
+            print("Response after %u cycles" % cycles)
+        
+    else:
+        szRx, pbtRx = nfc.initiator_transceive_bytes(pnd, pbtTx, szTx, len(abtRx),  0)
+        if szRx < 0:
+            return False
+    
+    # Show received answer
+    if not quiet_output:
+        print('Received bits: ', end='')
+        nfc.print_hex(pbtRx, szRx)
+    
+    # Succesful transfer
+    return pbtRx
 
 
 
@@ -103,11 +130,16 @@ if (nfc.device_set_property_bool(pnd, nfc.NP_AUTO_ISO14443_4, False) < 0):
 print("NFC reader:", nfc.device_get_name(pnd), "opened")
 
 # Send the 7 bits request command specified in ISO 14443A (0x26)
-if not transmit_bits(abtReqa, 7):
-    print("Error: No tag available")
-    nfc.close(pnd)
-    nfc.exit(context)
-    exit()
+abtRx = transmit_bits(abtReqa, 7)
+
+  
+abtAtqa = abtRx[0:2]
+
+abtRx = transmit_bytes(abtSelectAll, 2)
+
+# Check answer
+if (abtRx[0] ^ abtRx[1] ^ abtRx[2] ^ abtRx[3] ^ abtRx[4]) != 0:
+    print("WARNING: BCC check failed!")
   
     
     
