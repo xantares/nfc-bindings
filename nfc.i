@@ -254,7 +254,24 @@ int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const 
 
 
 %define nfc_initiator_transceive_bits_doc
-"initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (pbtRx, pbtRxPar)"
+"initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (ret, pbtRx, pbtRxPar)
+
+Transceive raw bit-frames to a target.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : contains a byte array of the frame that needs to be transmitted.
+  szTxBits : contains the length in bits
+  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
+  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+
+Returns
+-------
+  ret : received bits count on success, otherwise returns libnfc's error code
+  pbtRx : response from the target
+  pbtRxPar : parameter contains a byte array of the corresponding parity bits
+"
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bits_doc) nfc_initiator_transceive_bits;
 %apply (uint8_t *pbtRx, const size_t szRx) { (uint8_t *pbtRx, const size_t szTxBits) }; 
