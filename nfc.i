@@ -333,14 +333,112 @@ int nfc_initiator_transceive_bits_timed(nfc_device *pnd, const uint8_t *pbtTx, c
 
 
 
+%define nfc_target_init_doc
+"target_init(pnd, pnt, timeout) -> (ret, pbtRx)
+
+Initialize NFC device as an emulated tag.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pnt : nfc_target that represents the wanted emulated target
+  timeout : timeout in milliseconds
+  
+Returns
+-------
+  ret : received bits count on success, otherwise returns libnfc's error code
+  pbtRx : response from the target
+"
+%enddef
+%feature("autodoc", nfc_target_init_doc) nfc_target_init;
 int nfc_target_init(nfc_device *pnd, nfc_target *pnt, uint8_t *pbtRx, const size_t szRx, int timeout);
+
+
+
+%define nfc_target_send_bytes_doc
+"target_send_bytes(pnd, pbtTx, timeout) -> ret
+
+Send bytes and APDU frames.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : Tx buffer 
+  timeout : timeout in milliseconds
+  
+Returns
+-------
+  ret : sent bytes count on success, otherwise returns libnfc's error code
+"
+%enddef
+%feature("autodoc", nfc_target_send_bytes_doc) nfc_target_send_bytes;
 int nfc_target_send_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, int timeout);
+
+
+
+%define nfc_target_receive_bytes_doc
+"target_receive_bytes(pnd, szRx, timeout) -> (ret, pbtTx)
+
+Receive bytes and APDU frames.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : Tx buffer 
+  szRx : size of Rx buffer
+  timeout : timeout in milliseconds
+  
+Returns
+-------
+  ret : received bytes count on success, otherwise returns libnfc's error code
+  pbtTx : Rx buffer 
+"
+%enddef
+%feature("autodoc", nfc_target_receive_bytes_doc) nfc_target_receive_bytes;
 int nfc_target_receive_bytes(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, int timeout);
+
+
+
+
+%define nfc_target_send_bits_doc
+"target_send_bits(pnd, pbtTx, timeout) -> ret
+
+Send raw bit-frames.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : Tx buffer 
+  pbtTxPar : 
+  
+Returns
+-------
+  ret : sent bits count on success, otherwise returns libnfc's error code
+"
+%enddef
+%feature("autodoc", nfc_target_send_bytes_doc) nfc_target_send_bits;
 int nfc_target_send_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar);
 
 
+
+
 %define nfc_target_receive_bits_doc
-"nfc_target_receive_bits(pnd, pbtTx, szRx, szRx) -> (ret, pbtRx, pbtRxPar)"
+"target_receive_bits(pnd, szRx) -> (ret, pbtRx, pbtRxPar)
+
+Receive bit-frames.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  szRx : size of Rx buffer
+  
+Returns
+-------
+  ret : received bytes count on success, otherwise returns libnfc's error code
+  pbtTx : Rx buffer
+  pbtRxPar : parameter contains a byte array of the corresponding parity bits
+
+"
 %enddef
 %feature("autodoc", nfc_target_receive_bits_doc) nfc_target_receive_bits;
 int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
