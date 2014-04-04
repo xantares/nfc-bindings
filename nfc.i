@@ -253,6 +253,8 @@ Returns
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
 
+
+
 %define nfc_initiator_transceive_bits_doc
 "initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (ret, pbtRx, pbtRxPar)
 
@@ -277,10 +279,30 @@ Returns
 %apply (uint8_t *pbtRx, const size_t szRx) { (uint8_t *pbtRx, const size_t szTxBits) }; 
 int nfc_initiator_transceive_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
 
+
+
 %define nfc_initiator_transceive_bytes_timed_doc
-"initiator_transceive_bytes_timed(pnd, pbtTx, szTx, szRx) -> (szRxBits, pbtRx, cycles)"
+"initiator_transceive_bytes_timed(pnd, pbtTx, szTx, szRx) -> (ret, pbtRx, cycles)
+
+Send data to target then retrieve data from target. 
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : contains a byte array of the frame that needs to be transmitted
+  szTx : contains the length in bytes
+  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
+  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+
+Returns
+-------
+  ret : received bytes count on success, otherwise returns libnfc's error code
+  pbtRx : response from the target
+  cycles : number of cycles
+"
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
+%apply SWIGTYPE** OUTPUT { uint32_t *cycles };
 int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
 
 
@@ -364,10 +386,21 @@ uint8_t *iso14443a_locate_historical_bytes(uint8_t *pbtAts, size_t szAts, size_t
 void nfc_free(void *p);
 
 
+%define nfc_version_doc
+"version(pnd) -> version
 
-%ignore nfc_version;// available through __version__
+Returns the library version. 
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device 
+
+Returns
+-------
+  version : a string with the library version"
+%enddef
+%feature("autodoc", nfc_version_doc) nfc_version;
 const char *nfc_version(void);
-
 
 
 int nfc_device_get_information_about(nfc_device *pnd, char **buf);
