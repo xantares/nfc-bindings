@@ -9,8 +9,6 @@ import nfc
 
 MAX_FRAME_LEN = 264
 
-abtRx = bytes(MAX_FRAME_LEN)
-szRx = len(abtRx)
 abtRawUid = bytes(12)
 abtAtqa = bytes(2)
 abtAts = bytes(MAX_FRAME_LEN)
@@ -42,7 +40,7 @@ def transmit_bits(pbtTx, szTxBits):
     
     # Transmit the bit frame command, we don't use the arbitrary parity feature
     if timed:
-        szRxBits, pbtRx, cycles = nfc.initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, 0, len(abtRx), 0 )
+        szRxBits, pbtRx, cycles = nfc.initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN, 0 )
         if szRxBits < 0:
             return False
         if (not quiet_output) and (szRxBits > 0):

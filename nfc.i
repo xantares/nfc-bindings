@@ -302,12 +302,30 @@ Returns
 "
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
-%apply SWIGTYPE** OUTPUT { uint32_t *cycles };
+%typemap(in,numinputs=0) uint32_t *cycles ($*ltype temp) %{ temp = 0; $1 = &temp; %}
+%typemap(argout) uint32_t *cycles %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((void*)*$1,$*descriptor,0)); %}
 int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
 
 
 %define nfc_initiator_transceive_bits_timed_doc
-"initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (szRxBits, pbtRx, cycles)"
+"initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (ret, pbtRx, cycles)
+
+Transceive raw bit-frames to a target.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : contains a byte array of the frame that needs to be transmitted.
+  szTxBits : contains the length in bits
+  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
+  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+
+Returns
+-------
+  ret : received bits count on success, otherwise returns libnfc's error code
+  pbtRx : response from the target
+  cycles : number of cycles
+"
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bits_timed_doc) nfc_initiator_transceive_bits_timed;
 int nfc_initiator_transceive_bits_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar, uint32_t *cycles);
@@ -322,22 +340,81 @@ int nfc_target_send_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szT
 
 
 %define nfc_target_receive_bits_doc
-"nfc_target_receive_bits(pnd, pbtTx, szRx, pbtRxPar, szRx) -> (szRxBits, pbtRx)"
+"nfc_target_receive_bits(pnd, pbtTx, szRx, szRx) -> (ret, pbtRx, pbtRxPar)"
 %enddef
 %feature("autodoc", nfc_target_receive_bits_doc) nfc_target_receive_bits;
 int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
 
 
 
+
 %define nfc_strerror_doc
-"Return the last error string. "
+"strerror(pnd) -> error
+
+Return the last error string."
 %enddef
 %feature("autodoc", nfc_strerror_doc) nfc_strerror;
 const char *nfc_strerror(const nfc_device *pnd);
 
 
+
+
+%define nfc_strerror_r_doc
+"strerror_r(pnd, buf, buflen) -> ret
+
+Renders the last error in buf for a maximum size of buflen chars. 
+
+Parameters
+---------
+  pnd : nfc_device that represents the currently used device
+  buf : a string that contains the last error
+  buflen : size of buffer 
+
+Returns
+-------
+  ret : 0 upon success
+"
+%enddef
+%feature("autodoc", nfc_strerror_r_doc) nfc_strerror_r;
 int nfc_strerror_r(const nfc_device *pnd, char *buf, size_t buflen);
+
+
+
+
+%define nfc_perror_doc
+"perror(pnd, s)
+
+Display the last error occured on a nfc_device. 
+
+Parameters
+---------
+  pnd : nfc_device that represents the currently used device
+  s : a string
+
+"
+%enddef
+%feature("autodoc", nfc_perror_doc) nfc_perror;
 void nfc_perror(const nfc_device *pnd, const char *s);
+
+
+
+
+
+%define nfc_device_get_last_error_doc
+"device_get_last_error(pnd) -> ret
+
+Returns last error occured on a nfc_device. 
+
+Parameters
+---------
+  pnd : nfc_device that represents the currently used device
+  
+Returns
+-------
+  ret : an integer that represents to libnfc's error code.
+"
+%enddef
+%feature("autodoc", nfc_device_get_last_error_doc) nfc_device_get_last_error;
 int nfc_device_get_last_error(const nfc_device *pnd);
 
 
@@ -357,6 +434,7 @@ const char *nfc_device_get_name(nfc_device *pnd);
 
 
 
+
 %define nfc_device_get_connstring_doc
 "device_get_connstring(pnd) -> name
 
@@ -371,19 +449,91 @@ const char *nfc_device_get_connstring(nfc_device *pnd);
 
 
 
+
 int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  const nfc_modulation_type **const supported_mt);
+
+
+
+
 int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
 
+
+
+
+%define nfc_device_set_property_int_doc
+"device_set_property_int(pnd, property, value) -> ret
+
+Set a device's integer-property value.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device 
+  property : nfc_property which will be set
+  value : integer value
+  
+Parameters
+----------
+  ret: 0 on success, otherwise returns libnfc's error code (negative value)"
+%enddef
+%feature("autodoc", nfc_device_set_property_int_doc) nfc_device_set_property_int;
 int nfc_device_set_property_int(nfc_device *pnd, const nfc_property property, const int value);
+
+
+
+
+%define nfc_device_set_property_bool_doc
+"device_set_property_bool(pnd, property, bEnable) -> ret
+
+Get a device's integer-property value.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device 
+  property : nfc_property which will be set
+  bEnable : boolean to activate/disactivate the property
+  
+Parameters
+----------
+  ret : 0 on success, otherwise returns libnfc's error code (negative value)"
+%enddef
+%feature("autodoc", nfc_device_set_property_bool_doc) nfc_device_set_property_bool;
 int nfc_device_set_property_bool(nfc_device *pnd, const nfc_property property, const bool bEnable);
 
+
+
+
 void iso14443a_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
+
+
+
+
+
 void iso14443a_crc_append(uint8_t *pbtData, size_t szLen);
+
+
+
+
+
 void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
+
+
+
+
+
 void iso14443b_crc_append(uint8_t *pbtData, size_t szLen);
+
+
+
+
+
 uint8_t *iso14443a_locate_historical_bytes(uint8_t *pbtAts, size_t szAts, size_t *pszTk);
 
+
+
+
 void nfc_free(void *p);
+
+
 
 
 %define nfc_version_doc
