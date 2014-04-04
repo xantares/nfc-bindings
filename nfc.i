@@ -28,7 +28,7 @@ init() -> context
 
 Returns
 -------
-  context: the initialized nfc context"
+  context : Output location for nfc_context"
 %enddef
 %feature("autodoc", nfc_init_doc) nfc_init;
 //%newobject nfc_init;
@@ -46,7 +46,7 @@ exit(context)
 
 Parameters
 ----------
-  context: nfc_context"
+  context: Output location for nfc_context"
 %enddef
 %feature("autodoc", nfc_exit_doc) nfc_exit;
 //%delobject nfc_exit;
@@ -59,12 +59,13 @@ Open a NFC device.
 
 Parameters
 ----------
-  context: nfc_context
+  context : The context to operate on. 
+  connstring : The device connection string if specific device is wanted, 0 otherwise 
   
 Returns
 -------
   ret : error code
-  device : device handle"
+  device : nfc_device if successfull"
 %enddef
 %feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
@@ -109,7 +110,7 @@ Close from a NFC device.
 
 Parameters
 ----------
-  pnd: device handle
+  pnd : nfc_device that represents the currently used device
 "
 %enddef
 %feature("autodoc", nfc_close_doc) nfc_close;
@@ -119,13 +120,17 @@ void nfc_close(nfc_device *pnd);
 
 
 %define nfc_abort_command_doc
-"abort_command(pnd)
+"abort_command(pnd) -> ret
 
 Abort current running command.
 
 Parameters
 ----------
-  pnd: device handle
+  pnd: nfc_device that represents the currently used device
+  
+Returns
+-------
+  Returns 0 on success, otherwise returns libnfc's error code.
 "
 %enddef
 %feature("autodoc", nfc_abort_command_doc) nfc_abort_command;
@@ -179,21 +184,43 @@ int nfc_initiator_init(nfc_device *pnd);
 
 
 
-%define initiator_init_secure_element_doc
+%define nfc_initiator_nfc_init_secure_element_doc
 "initiator_init_secure_element(pnd)
 
 Initialize NFC device as initiator with its secure element initiator (reader)  
 
 Parameters
 ----------
-  pnd: device handle
+  pnd : device handle"
+%enddef
+%feature("autodoc", nfc_initiator_nfc_init_secure_element_doc) nfc_initiator_init_secure_element;
+int nfc_initiator_init_secure_element(nfc_device *pnd);
+
+
+
+%define nfc_initiator_select_passive_target_doc
+"nfc_initiator_select_passive_target(pnd, nm, pbtInitData, szInitData, pnt) -> ret
+
+Initialize NFC device as initiator with its secure element initiator (reader)  
+
+Parameters
+----------
+  pnd : device handle
+  nm : 
+  pbtInitData : data
+  szInitData : data size
+  pnt : 
+  
+Returns
+-------
+  ret : libnfc's error code
 "
 %enddef
-
-
-
-int nfc_initiator_init_secure_element(nfc_device *pnd);
+%feature("autodoc", nfc_initiator_select_passive_target_doc) nfc_initiator_select_passive_target;
 int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
+
+
+
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
 int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTypes, const size_t szTargetTypes, const uint8_t uiPollNr, const uint8_t uiPeriod, nfc_target *pnt);
 int nfc_initiator_select_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
@@ -202,7 +229,23 @@ int nfc_initiator_deselect_target(nfc_device *pnd);
 
 
 %define nfc_initiator_transceive_bytes_doc
-"initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (szRxBits, pbtRx)"
+"initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (ret, pbtRx)
+
+Send data to target then retrieve data from target.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pbtTx : contains a byte array of the frame that needs to be transmitted.
+  szTx : contains the length in bytes.
+  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+  timeout : timeout in milliseconds
+
+Returns
+-------
+  ret : received bytes count on success, otherwise returns libnfc's error code
+  pbtRx : response from the target
+"
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_doc) nfc_initiator_transceive_bytes;
 %typemap(in,numinputs=1) (uint8_t *pbtRx, const size_t szRx) %{ $2 = PyInt_AsLong($input);$1 = (uint8_t *)calloc($2,sizeof(uint8_t)); %}
@@ -344,12 +387,17 @@ def convBytes(pData):
     return byt
 
 def print_hex(pbtData, szBytes):
+    """
+    print bytes in hexadecimal
+    """
     for szPos in range(szBytes):
         sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
     print('')
     
 def print_hex_bits(pbtData, szBits):
-
+    """
+    print bits in hexadecimal
+    """
     szBytes = divmod(szBits, 8)[0]
     for szPos in range(szBytes):
         sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
