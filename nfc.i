@@ -27,7 +27,7 @@
 init() -> context
 
 Returns
-=======
+-------
   context: the initialized nfc context"
 %enddef
 %feature("autodoc", nfc_init_doc) nfc_init;
@@ -250,7 +250,10 @@ int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, 
 %define nfc_strerror_doc
 "Return the last error string. "
 %enddef
+%feature("autodoc", nfc_strerror_doc) nfc_strerror;
 const char *nfc_strerror(const nfc_device *pnd);
+
+
 int nfc_strerror_r(const nfc_device *pnd, char *buf, size_t buflen);
 void nfc_perror(const nfc_device *pnd, const char *s);
 int nfc_device_get_last_error(const nfc_device *pnd);
@@ -259,10 +262,33 @@ int nfc_device_get_last_error(const nfc_device *pnd);
 
 
 %define nfc_device_get_name_doc
-"Returns the device name. "
+"device_get_name(pnd) -> name
+
+Returns the device name. 
+
+Parameters
+----------
+  pnd: device handle"
 %enddef
+%feature("autodoc", nfc_device_get_name_doc) nfc_device_get_name;
 const char *nfc_device_get_name(nfc_device *pnd);
+
+
+
+%define nfc_device_get_connstring_doc
+"device_get_connstring(pnd) -> name
+
+Returns the device connection string. 
+
+Parameters
+----------
+  pnd: device handle"
+%enddef
+%feature("autodoc", nfc_device_get_connstring_doc) nfc_device_get_connstring;
 const char *nfc_device_get_connstring(nfc_device *pnd);
+
+
+
 int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  const nfc_modulation_type **const supported_mt);
 int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
 
@@ -276,7 +302,14 @@ void iso14443b_crc_append(uint8_t *pbtData, size_t szLen);
 uint8_t *iso14443a_locate_historical_bytes(uint8_t *pbtAts, size_t szAts, size_t *pszTk);
 
 void nfc_free(void *p);
+
+
+
+%ignore nfc_version;// available through __version__
 const char *nfc_version(void);
+
+
+
 int nfc_device_get_information_about(nfc_device *pnd, char **buf);
 
 const char *str_nfc_modulation_type(const nfc_modulation_type nmt);
