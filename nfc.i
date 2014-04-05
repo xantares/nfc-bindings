@@ -78,7 +78,7 @@ void nfc_exit(nfc_context *context);
 
 
 %define nfc_open_doc
-"open(context, connstring) -> pnd
+"open(context, connstring=0) -> pnd
 
 Open a NFC device. 
 
@@ -214,7 +214,7 @@ int nfc_initiator_init_secure_element(nfc_device *pnd);
 
 
 %define nfc_initiator_select_passive_target_doc
-"nfc_initiator_select_passive_target(pnd, nm, pbtInitData, szInitData, pnt) -> ret
+"initiator_select_passive_target(pnd, nm, pbtInitData, szInitData, pnt) -> ret
 
 Initialize NFC device as initiator with its secure element initiator (reader)  
 
@@ -465,7 +465,16 @@ int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, 
 %define nfc_strerror_doc
 "strerror(pnd) -> error
 
-Return the last error string."
+Return the last error string.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  
+Returns
+-------
+  error : error string  
+"
 %enddef
 %feature("autodoc", nfc_strerror_doc) nfc_strerror;
 const char *nfc_strerror(const nfc_device *pnd);
@@ -541,7 +550,11 @@ Returns the device name.
 
 Parameters
 ----------
-  pnd: device handle"
+  pnd : nfc_device that represents the currently used device
+  
+Returns
+-------
+  name : device name"
 %enddef
 %feature("autodoc", nfc_device_get_name_doc) nfc_device_get_name;
 const char *nfc_device_get_name(nfc_device *pnd);
@@ -556,7 +569,11 @@ Returns the device connection string.
 
 Parameters
 ----------
-  pnd: device handle"
+  pnd : nfc_device that represents the currently used device
+  
+Returns
+-------
+  name : device connection string"
 %enddef
 %feature("autodoc", nfc_device_get_connstring_doc) nfc_device_get_connstring;
 const char *nfc_device_get_connstring(nfc_device *pnd);
@@ -564,11 +581,43 @@ const char *nfc_device_get_connstring(nfc_device *pnd);
 
 
 
+%define nfc_device_get_supported_modulation_doc
+"device_get_supported_modulation(pnd, mode) -> (ret, supported_mt)
+
+Get supported modulations.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  mode : nfc_mode
+  
+Returns
+-------
+  ret : 0 on success, otherwise returns libnfc's error code (negative value) 
+  supported_mt : nfc_modulation_type array."
+%enddef
+%feature("autodoc", nfc_device_get_supported_modulation_doc) nfc_device_get_supported_modulation;
 int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  const nfc_modulation_type **const supported_mt);
 
 
 
 
+%define nfc_device_get_supported_baud_rate_doc
+"device_get_supported_baud_rate_doc(pnd, mode) -> (ret, supported_br)
+
+Get supported baud rates.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  nmt : nfc_modulation_type
+  
+Returns
+-------
+  ret : 0 on success, otherwise returns libnfc's error code (negative value) 
+  supported_br : nfc_modulation_type array."
+%enddef
+%feature("autodoc", nfc_device_get_supported_baud_rate_doc) nfc_device_get_supported_baud_rate;
 int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
 
 
@@ -585,9 +634,9 @@ Parameters
   property : nfc_property which will be set
   value : integer value
   
-Parameters
-----------
-  ret: 0 on success, otherwise returns libnfc's error code (negative value)"
+Returns
+-------
+ret: 0 on success, otherwise returns libnfc's error code (negative value)"
 %enddef
 %feature("autodoc", nfc_device_set_property_int_doc) nfc_device_set_property_int;
 int nfc_device_set_property_int(nfc_device *pnd, const nfc_property property, const int value);
@@ -606,8 +655,8 @@ Parameters
   property : nfc_property which will be set
   bEnable : boolean to activate/disactivate the property
   
-Parameters
-----------
+Returns
+-------
   ret : 0 on success, otherwise returns libnfc's error code (negative value)"
 %enddef
 %feature("autodoc", nfc_device_set_property_bool_doc) nfc_device_set_property_bool;
@@ -616,35 +665,56 @@ int nfc_device_set_property_bool(nfc_device *pnd, const nfc_property property, c
 
 
 
+%define iso14443a_crc_doc
+"iso14443a_crc(pbtData, szLen, pbtCrc)"
+%enddef
+%feature("autodoc", iso14443a_crc_doc) iso14443a_crc;
 void iso14443a_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 
 
 
 
-
+%define iso14443a_crc_append_doc
+"iso14443a_crc_append(pbtData, szLen)"
+%enddef
+%feature("autodoc", iso14443a_crc_append_doc) iso14443a_crc_append;
 void iso14443a_crc_append(uint8_t *pbtData, size_t szLen);
 
 
 
 
-
+%define iso14443b_crc_doc
+"iso14443b_crc(pbtData, szLen, pbtCrc)"
+%enddef
+%feature("autodoc", iso14443b_crc_doc) iso14443b_crc;
 void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 
 
 
 
-
+%define iso14443b_crc_append_doc
+"iso14443b_crc_append(pbtData, szLen)"
+%enddef
+%feature("autodoc", iso14443b_crc_append_doc) iso14443b_crc_append;
 void iso14443b_crc_append(uint8_t *pbtData, size_t szLen);
 
 
 
 
-
+%define iso14443a_locate_historical_bytes_doc
+"iso14443a_locate_historical_bytes(pbtAts, szAts, pszTk) -> ret"
+%enddef
+%feature("autodoc", iso14443a_locate_historical_bytes_doc) iso14443a_locate_historical_bytes;
 uint8_t *iso14443a_locate_historical_bytes(uint8_t *pbtAts, size_t szAts, size_t *pszTk);
 
 
 
+%define nfc_free_doc
+"free(p)
 
+Free buffer allocated by libnfc."
+%enddef
+%feature("autodoc", nfc_free_doc) nfc_free;
 void nfc_free(void *p);
 
 
@@ -667,10 +737,85 @@ Returns
 const char *nfc_version(void);
 
 
+
+
+%define nfc_device_get_information_about_doc
+"device_get_information_about(pnd) -> (ret, buf)
+
+Print information about NFC device.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device 
+
+Returns
+-------
+  ret : the number of characters printed (excluding the null byte used to end output to strings), otherwise returns libnfc's error code (negative value)
+  buf : information printed
+"
+%enddef
+%feature("autodoc", nfc_device_get_information_about_doc) nfc_device_get_information_about;
 int nfc_device_get_information_about(nfc_device *pnd, char **buf);
 
+
+
+
+%define str_nfc_modulation_type_doc
+"str_nfc_modulation_type(nmt) -> type
+
+Convert nfc_modulation_type value to string.
+
+Parameters
+----------
+  nmt : nfc_modulation_type
+
+Returns
+-------
+  buf : information printed
+"
+%enddef
+%feature("autodoc", str_nfc_modulation_type_doc) str_nfc_modulation_type;
 const char *str_nfc_modulation_type(const nfc_modulation_type nmt);
+
+
+
+
+%define str_nfc_baud_rate_doc
+"str_nfc_baud_rate(nbr) -> buf
+
+Convert nfc_baud_rate value to string.
+
+Parameters
+----------
+  nbr : nfc_baud_rate to convert
+
+Returns
+-------
+  buf : the nfc baud rate 
+"
+%enddef
+%feature("autodoc", str_nfc_baud_rate_doc) str_nfc_baud_rate;
 const char *str_nfc_baud_rate(const nfc_baud_rate nbr);
+
+
+
+
+%define str_nfc_target_doc
+"str_nfc_modulation_type(pnt, verbose) -> buf
+
+Convert nfc_modulation_type value to string.
+
+Parameters
+----------
+  pnt : nfc_target struct to print 
+  verbose : boolean
+
+Returns
+-------
+  buf : nfc target information printed
+"
+%enddef
+%feature("autodoc", str_nfc_target_doc) str_nfc_target;
 int str_nfc_target(char **buf, const nfc_target *pnt, bool verbose);
 
 
@@ -705,17 +850,31 @@ def convBytes(pData):
         byt = pData
     return byt
 
+    
 def print_hex(pbtData, szBytes):
     """
     print bytes in hexadecimal
+    
+    Parameters
+    ----------
+      pbtData : bytes to print
+      szBytes : size in bytes
+    
     """
     for szPos in range(szBytes):
         sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
     print('')
     
+    
 def print_hex_bits(pbtData, szBits):
     """
     print bits in hexadecimal
+        
+    Parameters
+    ----------
+      pbtData : bits to print
+      szBits : size in bits
+    
     """
     szBytes = divmod(szBits, 8)[0]
     for szPos in range(szBytes):
