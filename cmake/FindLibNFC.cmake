@@ -36,14 +36,8 @@
 #  License text for the above reference.)
 
 
-if ( LIBNFC_INCLUDE_DIR AND LIBNFC_LIBRARIES )
-  # Already in cache, be silent
-  set ( LibNFC_FIND_QUIETLY TRUE )
-endif ()
-
 find_package(PkgConfig)
 pkg_check_modules(PC_LIBNFC libnfc)
-
 
 find_path ( LIBNFC_INCLUDE_DIR
             NAMES
