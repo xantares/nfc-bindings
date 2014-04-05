@@ -27,9 +27,9 @@ Installation
 
 Requirements
 
-    * libnfc >= 1.7.0
-    * cmake
-    * swig
+  * libnfc >= 1.7.0
+  * cmake
+  * swig
     
 Build
     

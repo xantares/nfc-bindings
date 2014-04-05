@@ -21,6 +21,23 @@
 %typemap(out) uint8_t abtUid[10] %{ $result = toPyBytesSize($1, 10); %}
 %typemap(out) uint8_t abtAts[254] %{ $result = toPyBytesSize($1, 254); %}
 
+%typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
+  $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
+}
+%typemap(in) uint8_t * %{
+  $1 = 0;
+  if(checkPyBytes($input)) {
+    $1 = fromPyBytes($input);
+  }
+%}
+
+//%newobject nfc_initiator_select_passive_target;
+//%typemap(in,numinputs=0) nfc_target *pnt ($*ltype temp) %{ $1 = &temp; %}
+//%typemap(argout) nfc_target *pnt %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(SWIG_as_voidptr($1),$descriptor,SWIG_POINTER_NEW |0)); %}
+//int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
+//%clear nfc_target *pnt;
+
+
 
 
 %define nfc_init_doc
@@ -41,6 +58,9 @@ Returns
 %clear nfc_context **context;
 %typemap(newfree) nfc_context * "nfc_exit($1);";
 
+
+
+
 %define nfc_exit_doc
 "Deinitialize libnfc. Should be called after closing all open devices and before your application terminates. 
 
@@ -52,6 +72,9 @@ Parameters
 %enddef
 %feature("autodoc", nfc_exit_doc) nfc_exit;
 //%delobject nfc_exit;
+void nfc_exit(nfc_context *context);
+
+
 
 
 %define nfc_open_doc
@@ -71,7 +94,6 @@ Returns
 %feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
 %typemap(newfree) nfc_device * "nfc_close($1);";
-
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) const nfc_connstring {
   $1 = checkPyString($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
 }
@@ -88,21 +110,7 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 %clear nfc_device *;
 
 
-%typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
-  $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
-}
-%typemap(in) uint8_t * %{
-  $1 = 0;
-  if(checkPyBytes($input)) {
-    $1 = fromPyBytes($input);
-  }
-%}
 
-//%newobject nfc_initiator_select_passive_target;
-//%typemap(in,numinputs=0) nfc_target *pnt ($*ltype temp) %{ $1 = &temp; %}
-//%typemap(argout) nfc_target *pnt %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(SWIG_as_voidptr($1),$descriptor,SWIG_POINTER_NEW |0)); %}
-//int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
-//%clear nfc_target *pnt;
 
 %define nfc_close_doc
 "close(pnd)
@@ -117,6 +125,7 @@ Parameters
 %feature("autodoc", nfc_close_doc) nfc_close;
 void nfc_close(nfc_device *pnd);
 //%delobject nfc_close;
+
 
 
 
@@ -139,6 +148,7 @@ int nfc_abort_command(nfc_device *pnd);
 
 
 
+
 %define nfc_list_devices_doc
 "list_devices(context) -> (size, connstrings)
 
@@ -158,6 +168,7 @@ size_t nfc_list_devices(nfc_context *context, nfc_connstring connstrings[], size
 
 
 
+
 %define nfc_idle_doc
 "idle(pnd)
 
@@ -173,6 +184,7 @@ int nfc_idle(nfc_device *pnd);
 
 
 
+
 %define initiator_init_doc
 "Initialize NFC device as initiator (reader)
 
@@ -182,6 +194,7 @@ Parameters
 "
 %enddef
 int nfc_initiator_init(nfc_device *pnd);
+
 
 
 
@@ -196,6 +209,7 @@ Parameters
 %enddef
 %feature("autodoc", nfc_initiator_nfc_init_secure_element_doc) nfc_initiator_init_secure_element;
 int nfc_initiator_init_secure_element(nfc_device *pnd);
+
 
 
 
@@ -222,11 +236,13 @@ int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm
 
 
 
+
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
 int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTypes, const size_t szTargetTypes, const uint8_t uiPollNr, const uint8_t uiPeriod, nfc_target *pnt);
 int nfc_initiator_select_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
 int nfc_initiator_poll_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
 int nfc_initiator_deselect_target(nfc_device *pnd);
+
 
 
 %define nfc_initiator_transceive_bytes_doc
