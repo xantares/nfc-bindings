@@ -11,8 +11,6 @@ For now only bindings are supported (2.x and 3.x).
 Example
 -------
 
-.. code:: python
-
     import nfc
     context = nfc.init()
     ret, pnd = nfc.open(context, 0)
@@ -23,8 +21,6 @@ Example
 
 Installation
 ------------
-
-.. code:: bash
 
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings
