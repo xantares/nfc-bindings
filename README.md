@@ -24,7 +24,8 @@ Example
 Installation
 ------------
 
-.. code:: shell
+.. code:: bash
+
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings
     cmake -DCMAKE_INSTALL_PREFIX=$PWD/install .
