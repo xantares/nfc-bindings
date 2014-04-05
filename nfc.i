@@ -21,6 +21,8 @@
 %typemap(out) uint8_t abtUid[10] { $result = toPyBytesSize($1, 10); }
 %typemap(out) uint8_t abtAts[254] { $result = toPyBytesSize($1, 254); }
 
+
+
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
   $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
 }
@@ -48,7 +50,7 @@ Returns
 %typemap(in,numinputs=0) SWIGTYPE** OUTPUT ($*ltype temp) %{ $1 = &temp; %}
 %typemap(argout) SWIGTYPE** OUTPUT %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((void*)*$1,$*descriptor,0)); %}
 %apply SWIGTYPE** OUTPUT { nfc_context **context };
-    void nfc_init(nfc_context **context);
+void nfc_init(nfc_context **context);
 %clear nfc_context **context;
 %typemap(newfree) nfc_context * "nfc_exit($1);";
 
@@ -144,20 +146,33 @@ int nfc_abort_command(nfc_device *pnd);
 
 
 %define nfc_list_devices_doc
-"list_devices(context) -> (size, connstrings)
+"list_devices(context, connstrings_len) -> (ret, connstrings)
 
 Scan for discoverable supported devices (ie. only available for some drivers) 
 
 Parameters
 ----------
   context : nfc handle
+  connstrings_len : size of the connstrings array
   
 Returns
 -------
-  connstrings: list of descriptions
+  ret : the number of devices found
+  connstrings: array of nfc_connstring
 "
 %enddef
 %feature("autodoc", nfc_list_devices_doc) nfc_list_devices;
+%apply SWIGTYPE** OUTPUT { nfc_connstring connstrings[] };
+%typemap(in,numinputs=1) (nfc_connstring connstrings[], size_t connstrings_len) %{ $2 = PyInt_AsLong($input);$1 = (nfc_connstring *)calloc($2,sizeof(nfc_connstring)); %}
+%typemap(argout) (nfc_connstring connstrings[], size_t connstrings_len) %{
+  PyObject * connstrings = PyTuple_New(result); 
+  for(size_t i = 0; i < result; ++i) {
+    PyObject * connstring = toPyString($1[i]);
+    PyTuple_SetItem( connstrings, i, connstring );
+  }    
+  $result = connstrings;
+//free($1);
+%}
 size_t nfc_list_devices(nfc_context *context, nfc_connstring connstrings[], size_t connstrings_len);
 
 
