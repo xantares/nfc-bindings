@@ -13,6 +13,8 @@
 %include <cstring.i>
 %rename("%(strip:[nfc_])s") "";
 
+%apply int { size_t };
+
 %typemap(out) uint8_t = int;
 
 %typemap(out) uint8_t abtAtqa[2] %{ $result = toPyBytesSize($1, 2); %}
@@ -278,7 +280,6 @@ Returns
 %feature("autodoc", nfc_initiator_transceive_bits_doc) nfc_initiator_transceive_bits;
 %apply (uint8_t *pbtRx, const size_t szRx) { (uint8_t *pbtRx, const size_t szTxBits) }; 
 int nfc_initiator_transceive_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, const uint8_t *pbtTxPar, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
-
 
 
 %define nfc_initiator_transceive_bytes_timed_doc
@@ -678,7 +679,7 @@ import sys
 
 
 def convBytes(pData):
-    if sys.version_info[0] < 3:  # python 2
+    if sys.version_info[0] < -3:  # python 2
         byt = ord(pData)
     else:
         byt = pData

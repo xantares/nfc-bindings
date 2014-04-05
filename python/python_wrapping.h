@@ -31,16 +31,19 @@ int checkPyString(PyObject * pyObj)
 int checkPyBytes(PyObject * pyObj)
 {
 #if PY_MAJOR_VERSION >= 3
-  return PyBytes_Check(pyObj);
+  return PyBytes_Check(pyObj)||PyByteArray_Check(pyObj);
 #else
-  return PyString_Check(pyObj);
+  return PyString_Check(pyObj)||PyByteArray_Check(pyObj);
 #endif
 }
 
 char* fromPyBytes(PyObject * pyObj)
-{
+{  
+  if(PyByteArray_Check(pyObj))
+      return PyByteArray_AsString(pyObj);
 #if PY_MAJOR_VERSION >= 3
-  return PyBytes_AsString(pyObj);
+  if (PyBytes_Check(pyObj))
+      return PyBytes_AsString(pyObj);
 #else
   return PyString_AsString(pyObj);
 #endif
@@ -48,20 +51,22 @@ char* fromPyBytes(PyObject * pyObj)
 
 PyObject* toPyBytes(const char *buf)
 {
-#if PY_MAJOR_VERSION >= 3
   return PyBytes_FromString(buf);
-#else
-  return PyString_FromString(buf);
-#endif
+// #if PY_MAJOR_VERSION >= 3
+//   return PyBytes_FromString(buf);
+// #else
+//   return PyString_FromString(buf);
+// #endif
 }
 
 PyObject* toPyBytesSize(const char *buf, int size)
 {
-#if PY_MAJOR_VERSION >= 3
-  return PyBytes_FromStringAndSize(buf, size);
-#else
-  return PyString_FromStringAndSize(buf, size);
-#endif
+  return PyByteArray_FromStringAndSize(buf, size);
+// #if PY_MAJOR_VERSION >= 3
+//   return PyByteArray_FromStringAndSize(buf, size);
+// #else
+//   return PyString_FromStringAndSize(buf, size);
+// #endif
 }
 
 

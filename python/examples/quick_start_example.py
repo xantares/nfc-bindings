@@ -43,3 +43,5 @@ if nt.nti.nai.szAtsLen:
     print('          ATS (ATR): ', end='')
     nfc.print_hex(nt.nti.nai.abtAts, nt.nti.nai.szAtsLen)
     
+nfc.close(pnd)
+nfc.exit(context)

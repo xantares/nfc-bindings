@@ -21,11 +21,11 @@ timed = False
 iso_ats_supported = False
 
 # ISO14443A Anti-Collision Commands
-abtReqa = bytes([0x26])
-abtSelectAll = bytes([0x93, 0x20])
-abtSelectTag = bytes([0x93, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
-abtRats = bytes([0xe0, 0x50, 0x00, 0x00])
-abtHalt = bytes([0x50, 0x00, 0x00, 0x00])
+abtReqa = bytearray([0x26])
+abtSelectAll = bytearray([0x93, 0x20])
+abtSelectTag = bytearray([0x93, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+abtRats = bytearray([0xe0, 0x50, 0x00, 0x00])
+abtHalt = bytearray([0x50, 0x00, 0x00, 0x00])
 
 CASCADE_BIT = 0x04
 
@@ -47,7 +47,7 @@ def transmit_bits(pbtTx, szTxBits):
             print("Response after %u cycles" % cycles)
         
     else:
-        szRxBits, pbtRx = nfc.initiator_transceive_bits(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN,  0)
+        szRxBits, pbtRx = nfc.initiator_transceive_bits(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN, 0)
         if szRxBits < 0:
             return False
     
@@ -139,6 +139,6 @@ abtRx = transmit_bytes(abtSelectAll, 2)
 if (abtRx[0] ^ abtRx[1] ^ abtRx[2] ^ abtRx[3] ^ abtRx[4]) != 0:
     print("WARNING: BCC check failed!")
   
-    
-    
+nfc.close(pnd)
+nfc.exit(context)
     
