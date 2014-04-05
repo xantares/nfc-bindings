@@ -5,7 +5,6 @@ Introduction
 ------------
 
 The project goal is to provide scripting language bindings for libnfc (http://www.libnfc.org/) through swig.
-
 For now only bindings are supported (2.x and 3.x).
 
 Example
