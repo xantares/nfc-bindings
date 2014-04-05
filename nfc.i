@@ -17,9 +17,9 @@
 
 %typemap(out) uint8_t = int;
 
-%typemap(out) uint8_t abtAtqa[2] %{ $result = toPyBytesSize($1, 2); %}
-%typemap(out) uint8_t abtUid[10] %{ $result = toPyBytesSize($1, 10); %}
-%typemap(out) uint8_t abtAts[254] %{ $result = toPyBytesSize($1, 254); %}
+%typemap(out) uint8_t abtAtqa[2] { $result = toPyBytesSize($1, 2); }
+%typemap(out) uint8_t abtUid[10] { $result = toPyBytesSize($1, 10); }
+%typemap(out) uint8_t abtAts[254] { $result = toPyBytesSize($1, 254); }
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
   $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
@@ -31,19 +31,13 @@
   }
 %}
 
-//%newobject nfc_initiator_select_passive_target;
-//%typemap(in,numinputs=0) nfc_target *pnt ($*ltype temp) %{ $1 = &temp; %}
-//%typemap(argout) nfc_target *pnt %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(SWIG_as_voidptr($1),$descriptor,SWIG_POINTER_NEW |0)); %}
-//int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
-//%clear nfc_target *pnt;
-
 
 
 
 %define nfc_init_doc
-"Initialize libnfc. This function must be called before calling any other libnfc function. 
+"init() -> context
 
-init() -> context
+Initialize libnfc. This function must be called before calling any other libnfc function. 
 
 Returns
 -------
@@ -62,9 +56,9 @@ Returns
 
 
 %define nfc_exit_doc
-"Deinitialize libnfc. Should be called after closing all open devices and before your application terminates. 
+"exit(context)
 
-exit(context)
+Deinitialize libnfc. Should be called after closing all open devices and before your application terminates. 
 
 Parameters
 ----------
@@ -221,7 +215,7 @@ Initialize NFC device as initiator with its secure element initiator (reader)
 Parameters
 ----------
   pnd : device handle
-  nm : 
+  nm : desired modulation 
   pbtInitData : data
   szInitData : data size
   pnt : 
@@ -236,8 +230,29 @@ int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm
 
 
 
+%define nfc_initiator_list_passive_targets_doc
+"initiator_list_passive_targets(pnd, nm, szTargets) -> (ret, ant)
 
+List passive or emulated tags.
+
+Parameters
+----------
+  pnd : device handle
+  nm : desired modulation 
+  szTargets : size of ant (will be the max targets listed)
+  
+Returns
+-------
+  ret : number of targets found on success, otherwise returns libnfc's error code (negative value)
+  ant : array of nfc_target that will be filled with targets info 
+"
+%enddef
+%feature("autodoc", nfc_initiator_list_passive_targets_doc) nfc_initiator_list_passive_targets;
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
+
+
+
+
 int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTypes, const size_t szTargetTypes, const uint8_t uiPollNr, const uint8_t uiPeriod, nfc_target *pnt);
 int nfc_initiator_select_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
 int nfc_initiator_poll_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
