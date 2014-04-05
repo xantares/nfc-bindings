@@ -18,8 +18,10 @@ def stop_dep_communication(pnd, context):
         nfc.exit(context)
         exit()
     
+    
+abtTx = b'Hello Mars!'
 
-context =  nfc.init()
+context = nfc.init()
 if context is None:
     print("Unable to init libnfc")
     exit()
@@ -28,6 +30,7 @@ MAX_DEVICE_COUNT = 2
 
 connstrings = nfc.list_devices(context, MAX_DEVICE_COUNT)
 szDeviceFound = len(connstrings)
+
 if szDeviceFound == 1:
     pnd = nfc.open(context, connstrings[0])
 elif szDeviceFound > 1:
@@ -40,9 +43,9 @@ else:
 nt = nfc.target()
 nt.nm.nmt = nfc.NMT_DEP
 nt.nm.nbr = nfc.NBR_UNDEFINED
-#nt.nti.ndi.abtNFCID3 = bytearray([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xff, 0x00, 0x00])
+nt.nti.ndi.abtNFCID3 = bytearray([0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xff, 0x00, 0x00])
 nt.nti.ndi.szGB = 4
-#nt.nti.ndi.abtGB = bytearray([0x12, 0x34, 0x56, 0x78])
+nt.nti.ndi.abtGB = bytearray([0x12, 0x34, 0x56, 0x78])
 nt.nti.ndi.ndm = nfc.NDM_UNDEFINED
 nt.nti.ndi.btDID = 0x00
 nt.nti.ndi.btBS = 0x00
@@ -72,8 +75,8 @@ if szRx < 0:
     exit()
 
 
-printf("Initiator request received. Waiting for data...\n")
-abtRx = nfc_target_receive_bytes(pnd, MAX_FRAME_LEN, 0)
+print("Initiator request received. Waiting for data...\n")
+abtRx = nfc.target_receive_bytes(pnd, MAX_FRAME_LEN, 0)
 szRx = len(abtRx)
 if szRx < 0:
     nfc.perror(pnd, "nfc_target_receive_bytes")
@@ -81,7 +84,7 @@ if szRx < 0:
     nfc.exit(context)
     exit()
 
-abtRx[szRx] = '\0'
+#abtRx[szRx] = '\0'
 print("Received: %s\n", abtRx)
 
 print("Sending: %s\n", abtTx);

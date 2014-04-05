@@ -15,13 +15,37 @@
 
 %apply int { size_t };
 
+%typemap(in) uint8_t = int;
 %typemap(out) uint8_t = int;
 
-%typemap(out) uint8_t abtAtqa[2] { $result = toPyBytesSize($1, 2); }
-%typemap(out) uint8_t abtUid[10] { $result = toPyBytesSize($1, 10); }
-%typemap(out) uint8_t abtAts[254] { $result = toPyBytesSize($1, 254); }
+%define uint8_t_static_out_helper(name, size)
+%typemap(out) uint8_t name[size] { $result = toPyBytesSize($1, size); }
+%enddef
 
+uint8_t_static_out_helper(abtNFCID3, 10)
+uint8_t_static_out_helper(abtGB, 10)
 
+uint8_t_static_out_helper(abtAtqa, 2)
+uint8_t_static_out_helper(abtUid, 10)
+uint8_t_static_out_helper(abtAts, 254)
+
+%define uint8_t_static_in_helper(name, size)
+%typemap(in) uint8_t name[size] %{
+int len = PySequence_Size($input);
+uint8_t * vs = fromPyBytes($input);
+int max_len = size;
+if (len <size)
+    max_len = len;
+if (vs) {
+  for (int i = 0; i < max_len; ++i) {
+    $1[i] = vs[i];
+  }       
+}
+%}
+%enddef
+
+uint8_t_static_in_helper(abtNFCID3, 10)
+uint8_t_static_in_helper(abtGB, 48)
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
   $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
@@ -169,9 +193,9 @@ Returns
   for(size_t i = 0; i < result; ++i) {
     PyObject * connstring = toPyString($1[i]);
     PyTuple_SetItem( connstrings, i, connstring );
-  }    
+  }
+  free($1);
   $result = connstrings;
-//free($1);
 %}
 size_t nfc_list_devices(nfc_context *context, nfc_connstring connstrings[], size_t connstrings_len);
 
