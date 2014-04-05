@@ -130,6 +130,11 @@ print("NFC reader:", nfc.device_get_name(pnd), "opened\n")
 # Send the 7 bits request command specified in ISO 14443A (0x26)
 ret, abtRx = transmit_bits(abtReqa, 7)
 
+if not ret:
+    print("Error: No tag available")
+    nfc.close(pnd)
+    nfc.exit(context)
+    exit()
   
 abtAtqa = abtRx[0:2]
 
