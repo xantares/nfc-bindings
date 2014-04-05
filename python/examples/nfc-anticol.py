@@ -92,8 +92,8 @@ def transmit_bytes(pbtTx, szTx):
 
 
 context = nfc.init()
-ret, pnd = nfc.open(context, 0)
-if ret < 0:
+pnd = nfc.open(context)
+if pnd is None:
     print('ERROR: Unable to open NFC device.')
     nfc.exit(context)
     exit()

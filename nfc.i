@@ -55,7 +55,7 @@ Parameters
 
 
 %define nfc_open_doc
-"open(context, connstring) -> (ret, device)
+"open(context, connstring) -> pnd
 
 Open a NFC device. 
 
@@ -66,14 +66,10 @@ Parameters
   
 Returns
 -------
-  ret : error code
-  device : nfc_device if successfull"
+  pnd : nfc_device if successfull, else None"
 %enddef
 %feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
-%typemap(out) nfc_device * %{
-  $result = SWIG_Python_AppendOutput(PyInt_FromLong($1!=NULL?0:-1), SWIG_NewPointerObj((void*)$1,$descriptor,0));
-%}
 %typemap(newfree) nfc_device * "nfc_close($1);";
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) const nfc_connstring {
@@ -85,6 +81,9 @@ Returns
     $1 = fromPyString($input);
   }
 %}
+%typemap(default) const nfc_connstring {
+   $1 = 0;
+}
 nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 %clear nfc_device *;
 
