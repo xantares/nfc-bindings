@@ -130,7 +130,7 @@ Abort current running command.
 
 Parameters
 ----------
-  pnd: nfc_device that represents the currently used device
+  pnd : nfc_device that represents the currently used device
   
 Returns
 -------
@@ -170,7 +170,7 @@ Turn NFC device in idle mode.
 
 Parameters
 ----------
-  pnd: device handle
+  pnd : nfc_device that represents the currently used device
 "
 %enddef
 %feature("autodoc", nfc_idle_doc) nfc_idle;
@@ -184,7 +184,7 @@ int nfc_idle(nfc_device *pnd);
 
 Parameters
 ----------
-  pnd: device handle
+  pnd : nfc_device that represents the currently used device
 "
 %enddef
 int nfc_initiator_init(nfc_device *pnd);
@@ -199,7 +199,7 @@ Initialize NFC device as initiator with its secure element initiator (reader)
 
 Parameters
 ----------
-  pnd : device handle"
+  pnd : nfc_device that represents the currently used device"
 %enddef
 %feature("autodoc", nfc_initiator_nfc_init_secure_element_doc) nfc_initiator_init_secure_element;
 int nfc_initiator_init_secure_element(nfc_device *pnd);
@@ -214,7 +214,7 @@ Initialize NFC device as initiator with its secure element initiator (reader)
 
 Parameters
 ----------
-  pnd : device handle
+  pnd : nfc_device that represents the currently used device
   nm : desired modulation 
   pbtInitData : data
   szInitData : data size
@@ -237,7 +237,7 @@ List passive or emulated tags.
 
 Parameters
 ----------
-  pnd : device handle
+  pnd : nfc_device that represents the currently used device
   nm : desired modulation 
   szTargets : size of ant (will be the max targets listed)
   
@@ -253,10 +253,97 @@ int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm,
 
 
 
+%define nfc_initiator_poll_target_doc
+"initiator_poll_target(pnd, pnmTargetTypes, szTargets, uiPollNr, uiPeriod) -> (ret, pnt)
+
+Polling for NFC targets.
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  pnmTargetTypes : desired modulations
+  szTargets : size of pnmModulations
+  uiPollNr : specifies the number of polling (0x01 - 0xFE: 1 up to 254 polling, 0xFF: Endless polling) 
+  uiPeriod : indicates the polling period in units of 150 ms (0x01 - 0x0F: 150ms - 2.25s) 
+  
+Returns
+-------
+  ret : polled targets count, otherwise returns libnfc's error code (negative value)
+  pnt : nfc_target (over)writable struct 
+"
+%enddef
+%feature("autodoc", nfc_initiator_poll_target_doc) nfc_initiator_poll_target;
 int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTypes, const size_t szTargetTypes, const uint8_t uiPollNr, const uint8_t uiPeriod, nfc_target *pnt);
+
+
+
+
+%define nfc_initiator_select_dep_target_doc
+"initiator_poll_target(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
+
+Select a target and request active or passive mode for D.E.P. (Data Exchange Protocol)
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  ndm : desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
+  nbr : desired baud rate 
+  pndiInitiator :  nfc_dep_info that contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
+  timeout : timeout in milliseconds
+  
+Returns
+-------
+  ret : selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
+  pnt : nfc_target (over)writable struct 
+"
+%enddef
+%feature("autodoc", nfc_initiator_select_dep_target_doc) nfc_initiator_select_dep_target;
 int nfc_initiator_select_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
+
+
+
+
+%define nfc_initiator_poll_dep_target_doc
+"initiator_poll_dep_target_doc(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
+
+Poll a target and request active or passive mode for D.E.P. (Data Exchange Protocol)
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  ndm : desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
+  nbr : desired baud rate 
+  pndiInitiator :  nfc_dep_info that contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
+  timeout : timeout in milliseconds
+  
+Returns
+-------
+  ret : selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
+  pnt :  nfc_target where target information will be put. 
+"
+%enddef
+%feature("autodoc", nfc_initiator_poll_dep_target_doc) nfc_initiator_poll_dep_target;
 int nfc_initiator_poll_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const nfc_baud_rate nbr, const nfc_dep_info *pndiInitiator, nfc_target *pnt, const int timeout);
+
+
+
+
+
+%define nfc_initiator_deselect_target_doc
+"initiator_deselect_target(pnd) -> ret
+
+Parameters
+----------
+  pnd : nfc_device that represents the currently used device
+  
+Returns
+-------
+  ret : 0 on success, otherwise returns libnfc's error code (negative value).
+"
+%enddef
+%feature("autodoc", nfc_initiator_deselect_target_doc) nfc_initiator_deselect_target;
 int nfc_initiator_deselect_target(nfc_device *pnd);
+
 
 
 
