@@ -19,8 +19,12 @@ Example
     nfc.close(pnd)
     nfc.exit(context)
 
+Find more examples in https://github.com/xantares/nfc-bindings/tree/master/python/examples
+    
 Installation
 ------------
+
+Install libnfc >= 1.7.0, cmake, swig
 
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings

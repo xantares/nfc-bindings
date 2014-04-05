@@ -670,6 +670,11 @@ int str_nfc_target(char **buf, const nfc_target *pnt, bool verbose);
 %include nfc/nfc.h
 %{
 #include <nfc/nfc.h>
+
+#ifdef NFC_NO_ISO14443B_CRC
+void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc) {}
+void iso14443b_crc_append(uint8_t *pbtData, size_t szLen) {}
+#endif
 %}
 
 %pythoncode %{
