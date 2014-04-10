@@ -128,9 +128,7 @@ pnd : nfc_device
     $1 = fromPyString($input);
   }
 %}
-%typemap(default) const nfc_connstring {
-   $1 = 0;
-}
+%typemap(default) const nfc_connstring {$1 = 0;}
 nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 %clear nfc_device *;
 
@@ -178,7 +176,7 @@ int nfc_abort_command(nfc_device *pnd);
 
 
 %define nfc_list_devices_doc
-"list_devices(context, connstrings_len) -> (ret, connstrings)
+"list_devices(context, connstrings_len) -> connstrings
 
 Scan for discoverable supported devices (ie. only available for some drivers) 
 
@@ -191,8 +189,6 @@ connstrings_len : int
   
 Returns
 -------
-ret :  int
-    the number of devices found
 connstrings : array of nfc_connstring
     devices list
 "
