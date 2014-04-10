@@ -67,7 +67,8 @@ Initialize libnfc. This function must be called before calling any other libnfc 
 
 Returns
 -------
-  context : Output location for nfc_context"
+context : nfc_context
+    Output location for nfc_context"
 %enddef
 %feature("autodoc", nfc_init_doc) nfc_init;
 //%newobject nfc_init;
@@ -88,7 +89,8 @@ Deinitialize libnfc. Should be called after closing all open devices and before 
 
 Parameters
 ----------
-  context: Output location for nfc_context"
+context : nfc_context
+    Output location for nfc_context"
 %enddef
 %feature("autodoc", nfc_exit_doc) nfc_exit;
 //%delobject nfc_exit;
@@ -104,12 +106,15 @@ Open a NFC device.
 
 Parameters
 ----------
-  context : The context to operate on. 
-  connstring : The device connection string if specific device is wanted, 0 otherwise 
+context : nfc_context
+    The context to operate on. 
+connstring : string
+    The device connection string if specific device is wanted, 0 otherwise 
   
 Returns
 -------
-  pnd : nfc_device if successfull, else None"
+pnd : nfc_device
+    device if successfull, else None"
 %enddef
 %feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
@@ -139,7 +144,8 @@ Close from a NFC device.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    device that represents the currently used device
 "
 %enddef
 %feature("autodoc", nfc_close_doc) nfc_close;
@@ -156,11 +162,13 @@ Abort current running command.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    device that represents the currently used device
   
 Returns
 -------
-  Returns 0 on success, otherwise returns libnfc's error code.
+ret : int
+    Returns 0 on success, otherwise returns libnfc's error code.
 "
 %enddef
 %feature("autodoc", nfc_abort_command_doc) nfc_abort_command;
@@ -176,13 +184,17 @@ Scan for discoverable supported devices (ie. only available for some drivers)
 
 Parameters
 ----------
-  context : nfc handle
-  connstrings_len : size of the connstrings array
+context : nfc_context
+    The context
+connstrings_len : int
+    size of the connstrings array
   
 Returns
 -------
-  ret : the number of devices found
-  connstrings: array of nfc_connstring
+ret :  int
+    the number of devices found
+connstrings : array of nfc_connstring
+    devices list
 "
 %enddef
 %feature("autodoc", nfc_list_devices_doc) nfc_list_devices;
@@ -209,7 +221,8 @@ Turn NFC device in idle mode.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    currently used device
 "
 %enddef
 %feature("autodoc", nfc_idle_doc) nfc_idle;
@@ -223,7 +236,8 @@ int nfc_idle(nfc_device *pnd);
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    currently used device
 "
 %enddef
 int nfc_initiator_init(nfc_device *pnd);
@@ -238,7 +252,8 @@ Initialize NFC device as initiator with its secure element initiator (reader)
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device"
+pnd : nfc_device
+    currently used device"
 %enddef
 %feature("autodoc", nfc_initiator_nfc_init_secure_element_doc) nfc_initiator_init_secure_element;
 int nfc_initiator_init_secure_element(nfc_device *pnd);
@@ -253,15 +268,20 @@ Initialize NFC device as initiator with its secure element initiator (reader)
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  nm : desired modulation 
-  pbtInitData : data
-  szInitData : data size
-  pnt : 
-  
+pnd : nfc_device
+    currently used device
+nm : nfc_modulation
+    desired modulation  
+pbtInitData : bytearray
+    data
+szInitData : int
+    data size
+pnt : nfc_target 
+    target
 Returns
 -------
-  ret : libnfc's error code
+ret : int
+    libnfc's error code
 "
 %enddef
 %feature("autodoc", nfc_initiator_select_passive_target_doc) nfc_initiator_select_passive_target;
@@ -276,14 +296,19 @@ List passive or emulated tags.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  nm : desired modulation 
-  szTargets : size of ant (will be the max targets listed)
+pnd : nfc_device
+    currently used device
+nm : nfc_modulation
+    desired modulation 
+szTargets : int
+    size of ant (will be the max targets listed)
   
 Returns
 -------
-  ret : number of targets found on success, otherwise returns libnfc's error code (negative value)
-  ant : array of nfc_target that will be filled with targets info 
+ret : int
+    number of targets found on success, otherwise returns libnfc's error code (negative value)
+ant : array of nfc_target
+    will be filled with targets info 
 "
 %enddef
 %feature("autodoc", nfc_initiator_list_passive_targets_doc) nfc_initiator_list_passive_targets;
@@ -299,16 +324,23 @@ Polling for NFC targets.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pnmTargetTypes : desired modulations
-  szTargets : size of pnmModulations
-  uiPollNr : specifies the number of polling (0x01 - 0xFE: 1 up to 254 polling, 0xFF: Endless polling) 
-  uiPeriod : indicates the polling period in units of 150 ms (0x01 - 0x0F: 150ms - 2.25s) 
+pnd : nfc_device
+    currently used device
+pnmTargetTypes : nfc_modulation
+    desired modulations
+szTargets : int
+    size of pnmModulations
+uiPollNr : int
+    specifies the number of polling (0x01 - 0xFE: 1 up to 254 polling, 0xFF: Endless polling) 
+uiPeriod : int
+    indicates the polling period in units of 150 ms (0x01 - 0x0F: 150ms - 2.25s) 
   
 Returns
 -------
-  ret : polled targets count, otherwise returns libnfc's error code (negative value)
-  pnt : nfc_target (over)writable struct 
+ret : int
+    polled targets count, otherwise returns libnfc's error code (negative value)
+pnt : nfc_target
+    (over)writable struct 
 "
 %enddef
 %feature("autodoc", nfc_initiator_poll_target_doc) nfc_initiator_poll_target;
@@ -318,22 +350,29 @@ int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTy
 
 
 %define nfc_initiator_select_dep_target_doc
-"initiator_poll_target(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
+"initiator_select_dep_target(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
 
 Select a target and request active or passive mode for D.E.P. (Data Exchange Protocol)
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  ndm : desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
-  nbr : desired baud rate 
-  pndiInitiator :  nfc_dep_info that contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+ndm : nfc_dep_mode
+    desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
+nbr : nfc_baud_rate
+    desired baud rate 
+pndiInitiator : nfc_dep_info
+    contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
+timeout : int
+    timeout in milliseconds
   
 Returns
 -------
-  ret : selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
-  pnt : nfc_target (over)writable struct 
+ret : int
+    selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
+pnt : nfc_target 
+    (over)writable struct 
 "
 %enddef
 %feature("autodoc", nfc_initiator_select_dep_target_doc) nfc_initiator_select_dep_target;
@@ -349,16 +388,23 @@ Poll a target and request active or passive mode for D.E.P. (Data Exchange Proto
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  ndm : desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
-  nbr : desired baud rate 
-  pndiInitiator :  nfc_dep_info that contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+ndm :
+    desired D.E.P. mode (NDM_ACTIVE or NDM_PASSIVE for active, respectively passive mode) 
+nbr : 
+    desired baud rate 
+pndiInitiator : nfc_dep_info
+    contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
+timeout : int
+    timeout in milliseconds
   
 Returns
 -------
-  ret : selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
-  pnt :  nfc_target where target information will be put. 
+ret : int
+    selected D.E.P targets count on success, otherwise returns libnfc's error code (negative value).
+pnt :  nfc_target
+    where target information will be put. 
 "
 %enddef
 %feature("autodoc", nfc_initiator_poll_dep_target_doc) nfc_initiator_poll_dep_target;
@@ -373,11 +419,13 @@ int nfc_initiator_poll_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    represents the currently used device
   
 Returns
 -------
-  ret : 0 on success, otherwise returns libnfc's error code (negative value).
+ret : int
+    0 on success, otherwise returns libnfc's error code (negative value).
 "
 %enddef
 %feature("autodoc", nfc_initiator_deselect_target_doc) nfc_initiator_deselect_target;
@@ -393,16 +441,23 @@ Send data to target then retrieve data from target.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : contains a byte array of the frame that needs to be transmitted.
-  szTx : contains the length in bytes.
-  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    contains a byte array of the frame that needs to be transmitted.
+szTx : int
+    contains the length in bytes.
+szRx : int
+    size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+timeout : int
+    timeout in milliseconds
 
 Returns
 -------
-  ret : received bytes count on success, otherwise returns libnfc's error code
-  pbtRx : response from the target
+ret : int
+    received bytes count on success, otherwise returns libnfc's error code
+pbtRx : bytes
+    response from the target
 "
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_doc) nfc_initiator_transceive_bytes;
@@ -420,17 +475,25 @@ Transceive raw bit-frames to a target.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : contains a byte array of the frame that needs to be transmitted.
-  szTxBits : contains the length in bits
-  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
-  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    contains a byte array of the frame that needs to be transmitted.
+szTxBits : int
+    contains the length in bits
+pbtTxPar : bytes
+    contains a byte array of the corresponding parity bits needed to send per byte.
+szRx : int
+    size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
 
 Returns
 -------
-  ret : received bits count on success, otherwise returns libnfc's error code
-  pbtRx : response from the target
-  pbtRxPar : parameter contains a byte array of the corresponding parity bits
+ret : int
+    received bits count on success, otherwise returns libnfc's error code
+pbtRx : bytes
+    response from the target
+pbtRxPar : bytes
+    parameter contains a byte array of the corresponding parity bits
 "
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bits_doc) nfc_initiator_transceive_bits;
@@ -445,17 +508,25 @@ Send data to target then retrieve data from target.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : contains a byte array of the frame that needs to be transmitted
-  szTx : contains the length in bytes
-  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
-  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    contains a byte array of the frame that needs to be transmitted
+szTx : int
+    contains the length in bytes
+pbtTxPar : bytes
+    contains a byte array of the corresponding parity bits needed to send per byte.
+szRx : int
+    size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
 
 Returns
 -------
-  ret : received bytes count on success, otherwise returns libnfc's error code
-  pbtRx : response from the target
-  cycles : number of cycles
+ret : int
+    received bytes count on success, otherwise returns libnfc's error code
+pbtRx : bytes
+    response from the target
+cycles : int
+    number of cycles
 "
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
@@ -471,17 +542,25 @@ Transceive raw bit-frames to a target.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : contains a byte array of the frame that needs to be transmitted.
-  szTxBits : contains the length in bits
-  pbtTxPar : contains a byte array of the corresponding parity bits needed to send per byte.
-  szRx : size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    contains a byte array of the frame that needs to be transmitted.
+szTxBits : int
+    contains the length in bits
+pbtTxPar : bytes
+    contains a byte array of the corresponding parity bits needed to send per byte.
+szRx : int
+    size of pbtRx (Will return NFC_EOVFLOW if RX exceeds this size)
 
 Returns
 -------
-  ret : received bits count on success, otherwise returns libnfc's error code
-  pbtRx : response from the target
-  cycles : number of cycles
+ret : int
+    received bits count on success, otherwise returns libnfc's error code
+pbtRx : bytes
+    response from the target
+cycles : int
+    number of cycles
 "
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bits_timed_doc) nfc_initiator_transceive_bits_timed;
@@ -497,14 +576,19 @@ Initialize NFC device as an emulated tag.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pnt : nfc_target that represents the wanted emulated target
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+pnt : nfc_target
+    wanted emulated target
+timeout : int
+    timeout in milliseconds
   
 Returns
 -------
-  ret : received bits count on success, otherwise returns libnfc's error code
-  pbtRx : response from the target
+ret : int
+    received bits count on success, otherwise returns libnfc's error code
+pbtRx : bytes
+    response from the target
 "
 %enddef
 %feature("autodoc", nfc_target_init_doc) nfc_target_init;
@@ -519,13 +603,17 @@ Send bytes and APDU frames.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : Tx buffer 
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    Tx buffer 
+timeout : int
+    timeout in milliseconds
   
 Returns
 -------
-  ret : sent bytes count on success, otherwise returns libnfc's error code
+ret : int
+    sent bytes count on success, otherwise returns libnfc's error code
 "
 %enddef
 %feature("autodoc", nfc_target_send_bytes_doc) nfc_target_send_bytes;
@@ -540,15 +628,21 @@ Receive bytes and APDU frames.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : Tx buffer 
-  szRx : size of Rx buffer
-  timeout : timeout in milliseconds
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    Tx buffer 
+szRx : int
+    size of Rx buffer
+timeout : int
+    timeout in milliseconds
   
 Returns
 -------
-  ret : received bytes count on success, otherwise returns libnfc's error code
-  pbtTx : Rx buffer 
+ret : int
+    received bytes count on success, otherwise returns libnfc's error code
+pbtTx : bytes
+    Rx buffer 
 "
 %enddef
 %feature("autodoc", nfc_target_receive_bytes_doc) nfc_target_receive_bytes;
@@ -564,13 +658,17 @@ Send raw bit-frames.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  pbtTx : Tx buffer 
-  pbtTxPar : 
+pnd : nfc_device
+    currently used device
+pbtTx : bytes
+    Tx buffer 
+pbtTxPar : bytes
+    a byte array of the corresponding parity bits
   
 Returns
 -------
-  ret : sent bits count on success, otherwise returns libnfc's error code
+ret : int
+    sent bits count on success, otherwise returns libnfc's error code
 "
 %enddef
 %feature("autodoc", nfc_target_send_bytes_doc) nfc_target_send_bits;
@@ -586,14 +684,19 @@ Receive bit-frames.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  szRx : size of Rx buffer
+pnd : nfc_device
+    currently used device
+szRx : int
+    size of Rx buffer
   
 Returns
 -------
-  ret : received bytes count on success, otherwise returns libnfc's error code
-  pbtTx : Rx buffer
-  pbtRxPar : parameter contains a byte array of the corresponding parity bits
+ret : int
+    received bytes count on success, otherwise returns libnfc's error code
+pbtTx : bytes
+    Rx buffer
+pbtRxPar : bytes
+    parameter contains a byte array of the corresponding parity bits
 
 "
 %enddef
@@ -610,11 +713,13 @@ Return the last error string.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    the currently used device
   
 Returns
 -------
-  error : error string  
+error : string
+    error string  
 "
 %enddef
 %feature("autodoc", nfc_strerror_doc) nfc_strerror;
@@ -630,13 +735,17 @@ Renders the last error in buf for a maximum size of buflen chars.
 
 Parameters
 ---------
-  pnd : nfc_device that represents the currently used device
-  buf : a string that contains the last error
-  buflen : size of buffer 
+pnd : nfc_device
+    currently used device
+buf : string
+    a string that contains the last error
+buflen : int
+    size of buffer 
 
 Returns
 -------
-  ret : 0 upon success
+ret : int
+    0 upon success
 "
 %enddef
 %feature("autodoc", nfc_strerror_r_doc) nfc_strerror_r;
@@ -652,8 +761,10 @@ Display the last error occured on a nfc_device.
 
 Parameters
 ---------
-  pnd : nfc_device that represents the currently used device
-  s : a string
+pnd : nfc_device
+    currently used device
+s : string 
+    a string
 
 "
 %enddef
@@ -671,11 +782,13 @@ Returns last error occured on a nfc_device.
 
 Parameters
 ---------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    currently used device
   
 Returns
 -------
-  ret : an integer that represents to libnfc's error code.
+ret : int
+    represents libnfc's error code.
 "
 %enddef
 %feature("autodoc", nfc_device_get_last_error_doc) nfc_device_get_last_error;
@@ -691,11 +804,14 @@ Returns the device name.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    currently used device
   
 Returns
 -------
-  name : device name"
+name : string
+    device name
+"
 %enddef
 %feature("autodoc", nfc_device_get_name_doc) nfc_device_get_name;
 const char *nfc_device_get_name(nfc_device *pnd);
@@ -710,11 +826,13 @@ Returns the device connection string.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
+pnd : nfc_device
+    currently used device
   
 Returns
 -------
-  name : device connection string"
+name : string
+    device connection string"
 %enddef
 %feature("autodoc", nfc_device_get_connstring_doc) nfc_device_get_connstring;
 const char *nfc_device_get_connstring(nfc_device *pnd);
@@ -729,13 +847,18 @@ Get supported modulations.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  mode : nfc_mode
+pnd : nfc_device
+    currently used device
+mode : nfc_mode
+    mode
   
 Returns
 -------
-  ret : 0 on success, otherwise returns libnfc's error code (negative value) 
-  supported_mt : nfc_modulation_type array."
+ret : integet
+    0 on success, otherwise returns libnfc's error code (negative value) 
+supported_mt : nfc_modulation_type array
+    the supported modulations
+"
 %enddef
 %feature("autodoc", nfc_device_get_supported_modulation_doc) nfc_device_get_supported_modulation;
 int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  const nfc_modulation_type **const supported_mt);
@@ -750,13 +873,18 @@ Get supported baud rates.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device
-  nmt : nfc_modulation_type
+pnd : nfc_device
+    currently used device
+nmt : nfc_modulation_type
+    desired modulation
   
 Returns
 -------
-  ret : 0 on success, otherwise returns libnfc's error code (negative value) 
-  supported_br : nfc_modulation_type array."
+ret : integet
+    0 on success, otherwise returns libnfc's error code (negative value) 
+supported_br : nfc_modulation_type array
+    supported baud rates
+"
 %enddef
 %feature("autodoc", nfc_device_get_supported_baud_rate_doc) nfc_device_get_supported_baud_rate;
 int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
@@ -771,13 +899,18 @@ Set a device's integer-property value.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device 
-  property : nfc_property which will be set
-  value : integer value
+pnd : nfc_device
+    currently used device 
+property : nfc_property
+    property which will be set
+value : int
+    value
   
 Returns
 -------
-ret: 0 on success, otherwise returns libnfc's error code (negative value)"
+ret : int
+    0 on success, otherwise returns libnfc's error code (negative value)
+"
 %enddef
 %feature("autodoc", nfc_device_set_property_int_doc) nfc_device_set_property_int;
 int nfc_device_set_property_int(nfc_device *pnd, const nfc_property property, const int value);
@@ -788,17 +921,21 @@ int nfc_device_set_property_int(nfc_device *pnd, const nfc_property property, co
 %define nfc_device_set_property_bool_doc
 "device_set_property_bool(pnd, property, bEnable) -> ret
 
-Get a device's integer-property value.
+Set a device's boolean-property value.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device 
-  property : nfc_property which will be set
-  bEnable : boolean to activate/disactivate the property
+pnd : nfc_device
+    currently used device 
+property : nfc_property
+    property which will be set
+bEnable : bool
+    activate/disactivate the property
   
 Returns
 -------
-  ret : 0 on success, otherwise returns libnfc's error code (negative value)"
+ret : int
+    0 on success, otherwise returns libnfc's error code (negative value)"
 %enddef
 %feature("autodoc", nfc_device_set_property_bool_doc) nfc_device_set_property_bool;
 int nfc_device_set_property_bool(nfc_device *pnd, const nfc_property property, const bool bEnable);
@@ -868,7 +1005,8 @@ Returns the library version.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device 
+pnd : nfc_device
+    currently used device 
 
 Returns
 -------
@@ -887,12 +1025,15 @@ Print information about NFC device.
 
 Parameters
 ----------
-  pnd : nfc_device that represents the currently used device 
+pnd : nfc_device
+    currently used device 
 
 Returns
 -------
-  ret : the number of characters printed (excluding the null byte used to end output to strings), otherwise returns libnfc's error code (negative value)
-  buf : information printed
+ret : int
+    number of characters printed (excluding the null byte used to end output to strings), otherwise returns libnfc's error code (negative value)
+buf : string
+    information printed
 "
 %enddef
 %feature("autodoc", nfc_device_get_information_about_doc) nfc_device_get_information_about;
@@ -902,17 +1043,19 @@ int nfc_device_get_information_about(nfc_device *pnd, char **buf);
 
 
 %define str_nfc_modulation_type_doc
-"str_nfc_modulation_type(nmt) -> type
+"str_nfc_modulation_type(nmt) -> buf
 
 Convert nfc_modulation_type value to string.
 
 Parameters
 ----------
-  nmt : nfc_modulation_type
+nmt : nfc_modulation_type
+    modulation type
 
 Returns
 -------
-  buf : information printed
+buf : string
+    information printed
 "
 %enddef
 %feature("autodoc", str_nfc_modulation_type_doc) str_nfc_modulation_type;
@@ -928,11 +1071,13 @@ Convert nfc_baud_rate value to string.
 
 Parameters
 ----------
-  nbr : nfc_baud_rate to convert
+nbr : nfc_baud_rate
+    rate to convert
 
 Returns
 -------
-  buf : the nfc baud rate 
+buf : string
+    the nfc baud rate 
 "
 %enddef
 %feature("autodoc", str_nfc_baud_rate_doc) str_nfc_baud_rate;
@@ -948,12 +1093,15 @@ Convert nfc_modulation_type value to string.
 
 Parameters
 ----------
-  pnt : nfc_target struct to print 
-  verbose : boolean
+pnt : nfc_target
+    struct to print 
+verbose : bool
+    verbosity
 
 Returns
 -------
-  buf : nfc target information printed
+buf : string
+    information printed
 "
 %enddef
 %feature("autodoc", str_nfc_target_doc) str_nfc_target;
@@ -998,8 +1146,10 @@ def print_hex(pbtData, szBytes):
     
     Parameters
     ----------
-      pbtData : bytes to print
-      szBytes : size in bytes
+    pbtData : bytes
+        bytes to print
+    szBytes : int
+        size in bytes
     
     """
     for szPos in range(szBytes):
@@ -1013,8 +1163,10 @@ def print_hex_bits(pbtData, szBits):
         
     Parameters
     ----------
-      pbtData : bits to print
-      szBits : size in bits
+    pbtData : bytes
+        bits to print
+    szBits : int
+        size in bits
     
     """
     szBytes = divmod(szBits, 8)[0]
