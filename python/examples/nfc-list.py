@@ -48,16 +48,9 @@ for i in range(szDeviceFound):
         if (res >= 0):
             if (verbose or (res > 0)):
                 print(res, 'ISO14443A passive target(s) found')
-            
             for n in range(res):
                 nfc.print_nfc_target(ant[n], verbose)
                 print('')
-
-
-
-
-
-
     nfc.close(pnd)
 nfc.exit(context)
     

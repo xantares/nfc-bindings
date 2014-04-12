@@ -37,7 +37,8 @@ int max_len = size;
 if (len <size)
     max_len = len;
 if (vs) {
-  for (int i = 0; i < max_len; ++i) {
+  int i;
+  for (i = 0; i < max_len; ++i) {
     $1[i] = vs[i];
   }       
 }
@@ -197,10 +198,11 @@ connstrings : array of nfc_connstring
 %apply SWIGTYPE** OUTPUT { nfc_connstring connstrings[] };
 %typemap(in,numinputs=1) (nfc_connstring connstrings[], size_t connstrings_len) %{ $2 = PyInt_AsLong($input);$1 = (nfc_connstring *)calloc($2,sizeof(nfc_connstring)); %}
 %typemap(argout) (nfc_connstring connstrings[], size_t connstrings_len) %{
-  PyObject * connstrings = PyTuple_New(result); 
-  for(size_t i = 0; i < result; ++i) {
+  PyObject * connstrings = PyList_New(result);
+  size_t i;
+  for(i = 0; i < result; ++i) {
     PyObject * connstring = toPyString($1[i]);
-    PyTuple_SetItem( connstrings, i, connstring );
+    PyList_SetItem( connstrings, i, connstring );
   }
   free($1);
   $result = connstrings;
@@ -311,12 +313,12 @@ ant : array of nfc_target
 %apply SWIGTYPE** OUTPUT { nfc_target ant[] };
 %typemap(in,numinputs=1) (nfc_target ant[], const size_t szTargets) %{ $2 = PyInt_AsLong($input);$1 = (nfc_target *)calloc($2,sizeof(nfc_target)); %}
 %typemap(argout) (nfc_target ant[], const size_t szTargets) %{
-  PyObject * ant = PyTuple_New(result); 
-  for(size_t i = 0; i < result; ++i) {
-    PyObject * target = SWIG_NewPointerObj((void*)&$1,$descriptor,0);
-    PyTuple_SetItem( ant, i, target );
+  PyObject * ant = PyList_New(result);
+  size_t i;
+  for(i = 0; i < result; ++i) {
+    PyObject * target = SWIG_NewPointerObj((void*)&($1[i]),$descriptor,0);
+    PyList_SetItem( ant, i, target );
   }
-  free($1);
   $result = SWIG_Python_AppendOutput($result, ant);
 %}
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
@@ -1206,6 +1208,6 @@ def print_nfc_target(pnt, verbose):
         verbosity flag
     """
     ret, s = str_nfc_target(pnt, verbose)
-    print(s, end='')
+    print(s, end='')  
        
 %}
