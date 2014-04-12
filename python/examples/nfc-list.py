@@ -8,6 +8,7 @@ from __future__ import print_function
 import nfc
 import sys
 
+verbose = False
 mask = 0xff
 max_device_count = 16
 max_target_count = 16
@@ -43,19 +44,20 @@ for i in range(szDeviceFound):
         nm.nmt = nfc.NMT_ISO14443A
         nm.nbr = nfc.NBR_106
         # List ISO14443A targets
-        #if ((res = nfc.initiator_list_passive_targets(pnd, nm, ant, max_target_count)) >= 0) {
-            #if (verbose || (res > 0))
-                #printf("%d ISO14443A passive target(s) found%s\n", res, (res == 0) ? ".\n" : ":");
+        res, ant = nfc.initiator_list_passive_targets(pnd, nm, max_target_count)
+        if (res >= 0):
+            if (verbose or (res > 0)):
+                print(res, 'ISO14443A passive target(s) found')
             
-            #for (n = 0; n < res; n++) {
-                #print_nfc_target(&ant[n], verbose);
-                #printf("\n");
+            for n in range(res):
+                #print_nfc_target(ant[n], verbose)
+                print('')
 
 
 
 
 
 
-nfc.close(pnd)
+    nfc.close(pnd)
 nfc.exit(context)
     

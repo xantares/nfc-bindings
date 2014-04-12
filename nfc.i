@@ -308,6 +308,17 @@ ant : array of nfc_target
 "
 %enddef
 %feature("autodoc", nfc_initiator_list_passive_targets_doc) nfc_initiator_list_passive_targets;
+%apply SWIGTYPE** OUTPUT { nfc_target ant[] };
+%typemap(in,numinputs=1) (nfc_target ant[], const size_t szTargets) %{ $2 = PyInt_AsLong($input);$1 = (nfc_target *)calloc($2,sizeof(nfc_target)); %}
+%typemap(argout) (nfc_target ant[], const size_t szTargets) %{
+  PyObject * ant = PyTuple_New(result); 
+  for(size_t i = 0; i < result; ++i) {
+    PyObject * target = SWIG_NewPointerObj((void*)$1,$*descriptor,0);
+    PyTuple_SetItem( ant, i, target );
+  }
+  free($1);
+  $result = SWIG_Python_AppendOutput($result, ant);
+%}
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
 
 
