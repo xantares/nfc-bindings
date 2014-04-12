@@ -50,7 +50,7 @@ for i in range(szDeviceFound):
                 print(res, 'ISO14443A passive target(s) found')
             
             for n in range(res):
-                #print_nfc_target(ant[n], verbose)
+                nfc.print_nfc_target(ant[n], verbose)
                 print('')
 
 

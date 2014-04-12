@@ -313,7 +313,7 @@ ant : array of nfc_target
 %typemap(argout) (nfc_target ant[], const size_t szTargets) %{
   PyObject * ant = PyTuple_New(result); 
   for(size_t i = 0; i < result; ++i) {
-    PyObject * target = SWIG_NewPointerObj((void*)$1,$*descriptor,0);
+    PyObject * target = SWIG_NewPointerObj((void*)&$1,$descriptor,0);
     PyTuple_SetItem( ant, i, target );
   }
   free($1);
@@ -1094,7 +1094,7 @@ const char *str_nfc_baud_rate(const nfc_baud_rate nbr);
 
 
 %define str_nfc_target_doc
-"str_nfc_modulation_type(pnt, verbose) -> buf
+"str_nfc_target(pnt, verbose) -> (ret, buf)
 
 Convert nfc_modulation_type value to string.
 
@@ -1107,13 +1107,17 @@ verbose : bool
 
 Returns
 -------
+ret : int
+    
 buf : string
     information printed
 "
 %enddef
 %feature("autodoc", str_nfc_target_doc) str_nfc_target;
+%typemap(in,numinputs=0) char **buf ($*ltype temp) %{ $1 = &temp; %}
+%typemap(argout) char **buf %{ $result = SWIG_Python_AppendOutput($result, toPyString(*$1)); %}
 int str_nfc_target(char **buf, const nfc_target *pnt, bool verbose);
-
+%clear char **buf;
 
 
 
@@ -1189,4 +1193,19 @@ def print_hex_bits(pbtData, szBits):
       
     print('')
 
+    
+def print_nfc_target(pnt, verbose):
+    """
+    print nfc_target
+    
+    Parameters
+    ----------
+    pnt : nfc_target 
+        (over)writable struct
+    verbose : bool    
+        verbosity flag
+    """
+    ret, s = str_nfc_target(pnt, verbose)
+    print(s, end='')
+       
 %}
