@@ -23,20 +23,17 @@ Example
     nfc.exit(context)
 
 Find more examples in https://github.com/xantares/nfc-bindings/tree/master/python/examples
-    
-Installation
-------------
 
 Requirements
-~~~~~~~~~~~~
+------------
 
-  * libnfc >= 1.7.0
-  * cmake
-  * swig
-    
+  - libnfc >= 1.7.0
+  - cmake
+  - swig
+
 Build
-~~~~~
-    
+-----
+
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings
     cmake -DCMAKE_INSTALL_PREFIX=$PWD/install .
