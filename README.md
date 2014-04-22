@@ -6,9 +6,9 @@ Introduction
 
 The project goal is to provide scripting language bindings for libnfc (http://www.libnfc.org/) through swig.
 
-Alternative Python bindings are provided by PyNFC (http://code.google.com/p/pynfc/source/list), which is somewhat higher-level, while the API does not seem to be fully covered.
-
 For now only Python bindings are supported (2.x and 3.x), with full docstrings.
+
+Alternative Python bindings are provided by PyNFC (http://code.google.com/p/pynfc/source/list), which is somewhat higher-level, while the API does not seem to be fully covered.
 
 Example
 -------
@@ -30,6 +30,7 @@ Requirements
   - libnfc >= 1.7.0
   - cmake
   - swig
+  - python headers
 
 Build
 -----
