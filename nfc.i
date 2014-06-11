@@ -1172,7 +1172,7 @@ def print_hex(pbtData, szBytes):
     
 def print_hex_bits(pbtData, szBits):
     """
-    print bits in hexadecimal
+    Print bits in hexadecimal
         
     Parameters
     ----------
@@ -1198,7 +1198,7 @@ def print_hex_bits(pbtData, szBits):
     
 def print_nfc_target(pnt, verbose):
     """
-    print nfc_target
+    Print a nfc_target
     
     Parameters
     ----------
