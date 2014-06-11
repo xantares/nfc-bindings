@@ -6,7 +6,7 @@ before_install:
 compiler: gcc
 
 before_script:
-  - mkdir build && cd build
+  - mkdir build && pushd build
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/libnfc/install/include .. && make install
+  - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/../libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/../libnfc/install/include .. && make install
