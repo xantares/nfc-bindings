@@ -11,4 +11,4 @@ before_script:
 script:
   - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/../libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/../libnfc/install/include ..
   - make install
-  - PYTHONPATH=$PWD/install/lib/python2.7/site-packages python ../python/examples/quick_start_example.py
+  - LD_LIBRARY_PATH=$PWD/../libnfc/install/lib/ PYTHONPATH=$PWD/install/lib/python2.7/site-packages python ../python/examples/quick_start_example.py
