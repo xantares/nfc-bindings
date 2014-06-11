@@ -1208,6 +1208,8 @@ def print_nfc_target(pnt, verbose):
         verbosity flag
     """
     ret, s = str_nfc_target(pnt, verbose)
-    print(s, end='')  
-       
+    try:
+        print(s, end='')
+    except:
+        print s,
 %}
