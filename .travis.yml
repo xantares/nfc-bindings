@@ -1,5 +1,7 @@
 language: cpp
-before_install: sudo apt-get install swig python-dev
+before_install:
+  - sudo apt-get install swig python-dev
+  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install && popd
 compiler:
   - gcc
   - clang
@@ -8,4 +10,4 @@ before_script:
   - mkdir build && cd build
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install .. && make install
+  - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/libnfc/install/include/nfc .. && make install
