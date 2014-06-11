@@ -1,7 +1,7 @@
 language: cpp
 before_install:
   - sudo apt-get install libusb-dev
-  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install && popd
+  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && git checkout tags/libnfc-1.7.1 && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install && popd
   - sudo apt-get install swig python-dev
 compiler: gcc
 
