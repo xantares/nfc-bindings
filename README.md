@@ -27,19 +27,11 @@ Find more examples in https://github.com/xantares/nfc-bindings/tree/master/pytho
 Requirements
 ------------
 
-  - libnfc >= 1.7.0
-  - cmake
-  - swig
-  - python headers
-
-<<<<<<< HEAD
   * libnfc >= 1.7.1
   * cmake
   * swig
   * python
-    
-=======
->>>>>>> b081ec0e104bd1aa34ac1e6a70400a3fc8b946a6
+
 Build
 -----
 
