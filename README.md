@@ -27,9 +27,10 @@ Installation
 
 Requirements
 
-  * libnfc >= 1.7.0
+  * libnfc >= 1.7.1
   * cmake
   * swig
+  * python
     
 Build
     

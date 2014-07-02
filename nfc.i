@@ -876,7 +876,7 @@ int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  c
 
 
 %define nfc_device_get_supported_baud_rate_doc
-"device_get_supported_baud_rate_doc(pnd, mode) -> (ret, supported_br)
+"device_get_supported_baud_rate_doc(pnd, mode, nmt) -> (ret, supported_br)
 
 Get supported baud rates.
 
@@ -884,12 +884,14 @@ Parameters
 ----------
 pnd : nfc_device
     currently used device
+mode : nfc_mode
+    possible values: N_TARGET, N_INITIATOR
 nmt : nfc_modulation_type
     desired modulation
   
 Returns
 -------
-ret : integet
+ret : integer
     0 on success, otherwise returns libnfc's error code (negative value) 
 supported_br : nfc_modulation_type array
     supported baud rates
