@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Quick start example that presents how to use libnfc
-"""
+"""Quick start example that presents how to use libnfc"""
 
 from __future__ import print_function
 import nfc
@@ -13,13 +12,13 @@ context = nfc.init()
 pnd = nfc.open(context)
 if pnd is None:
     print('ERROR: Unable to open NFC device.')
-    exit() 
-    
+    exit()
+
 if nfc.initiator_init(pnd) < 0:
     nfc.perror(pnd, "nfc_initiator_init")
     print('ERROR: Unable to init NFC device.')
     exit()
-    
+
 print('NFC reader: %s opened' % nfc.device_get_name(pnd))
 
 nmMifare = nfc.modulation()
@@ -42,6 +41,6 @@ print(nt.nti.nai.btSak)
 if nt.nti.nai.szAtsLen:
     print('          ATS (ATR): ', end='')
     nfc.print_hex(nt.nti.nai.abtAts, nt.nti.nai.szAtsLen)
-    
+
 nfc.close(pnd)
 nfc.exit(context)

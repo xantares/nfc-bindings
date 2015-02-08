@@ -40,7 +40,7 @@ if (vs) {
   int i;
   for (i = 0; i < max_len; ++i) {
     $1[i] = vs[i];
-  }       
+  }
 }
 %}
 %enddef
@@ -98,12 +98,8 @@ context : nfc_context
 void nfc_exit(nfc_context *context);
 
 
-
-
 %define nfc_open_doc
-"open(context, connstring=0) -> pnd
-
-Open a NFC device. 
+"Open a NFC device.
 
 Parameters
 ----------
@@ -111,7 +107,7 @@ context : nfc_context
     The context to operate on. 
 connstring : string
     The device connection string if specific device is wanted, 0 otherwise 
-  
+
 Returns
 -------
 pnd : nfc_device
@@ -137,9 +133,7 @@ nfc_device *nfc_open(nfc_context *context, const nfc_connstring connstring);
 
 
 %define nfc_close_doc
-"close(pnd)
-
-Close from a NFC device. 
+"Close from a NFC device.
 
 Parameters
 ----------
@@ -155,15 +149,13 @@ void nfc_close(nfc_device *pnd);
 
 
 %define nfc_abort_command_doc
-"abort_command(pnd) -> ret
-
-Abort current running command.
+"Abort current running command.
 
 Parameters
 ----------
 pnd : nfc_device
     device that represents the currently used device
-  
+
 Returns
 -------
 ret : int
@@ -177,9 +169,9 @@ int nfc_abort_command(nfc_device *pnd);
 
 
 %define nfc_list_devices_doc
-"list_devices(context, connstrings_len) -> connstrings
+"Scan for discoverable supported devices.
 
-Scan for discoverable supported devices (ie. only available for some drivers) 
+Only available for some drivers
 
 Parameters
 ----------
@@ -187,7 +179,7 @@ context : nfc_context
     The context
 connstrings_len : int
     size of the connstrings array
-  
+
 Returns
 -------
 connstrings : array of nfc_connstring
@@ -213,9 +205,7 @@ size_t nfc_list_devices(nfc_context *context, nfc_connstring connstrings[], size
 
 
 %define nfc_idle_doc
-"idle(pnd)
-
-Turn NFC device in idle mode. 
+"Turn NFC device in idle mode. 
 
 Parameters
 ----------
@@ -244,9 +234,7 @@ int nfc_initiator_init(nfc_device *pnd);
 
 
 %define nfc_initiator_nfc_init_secure_element_doc
-"initiator_init_secure_element(pnd)
-
-Initialize NFC device as initiator with its secure element initiator (reader)  
+"Initialize NFC device as initiator with its secure element initiator (reader).
 
 Parameters
 ----------
@@ -260,9 +248,7 @@ int nfc_initiator_init_secure_element(nfc_device *pnd);
 
 
 %define nfc_initiator_select_passive_target_doc
-"initiator_select_passive_target(pnd, nm, pbtInitData, szInitData, pnt) -> ret
-
-Initialize NFC device as initiator with its secure element initiator (reader)  
+"Initialize NFC device as initiator with its secure element initiator (reader).
 
 Parameters
 ----------
@@ -276,6 +262,7 @@ szInitData : int
     data size
 pnt : nfc_target 
     target
+
 Returns
 -------
 ret : int
@@ -288,9 +275,7 @@ int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm
 
 
 %define nfc_initiator_list_passive_targets_doc
-"initiator_list_passive_targets(pnd, nm, szTargets) -> (ret, ant)
-
-List passive or emulated tags.
+"List passive or emulated tags.
 
 Parameters
 ----------
@@ -300,7 +285,7 @@ nm : nfc_modulation
     desired modulation 
 szTargets : int
     size of ant (will be the max targets listed)
-  
+
 Returns
 -------
 ret : int
@@ -327,9 +312,7 @@ int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm,
 
 
 %define nfc_initiator_poll_target_doc
-"initiator_poll_target(pnd, pnmTargetTypes, szTargets, uiPollNr, uiPeriod) -> (ret, pnt)
-
-Polling for NFC targets.
+"Poll for NFC targets.
 
 Parameters
 ----------
@@ -343,7 +326,7 @@ uiPollNr : int
     specifies the number of polling (0x01 - 0xFE: 1 up to 254 polling, 0xFF: Endless polling) 
 uiPeriod : int
     indicates the polling period in units of 150 ms (0x01 - 0x0F: 150ms - 2.25s) 
-  
+
 Returns
 -------
 ret : int
@@ -359,9 +342,7 @@ int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTy
 
 
 %define nfc_initiator_select_dep_target_doc
-"initiator_select_dep_target(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
-
-Select a target and request active or passive mode for D.E.P. (Data Exchange Protocol)
+"Select a target and request active or passive mode for D.E.P. (Data Exchange Protocol).
 
 Parameters
 ----------
@@ -375,7 +356,7 @@ pndiInitiator : nfc_dep_info
     contains NFCID3 and General Bytes to set to the initiator device (optionnal, can be NULL)
 timeout : int
     timeout in milliseconds
-  
+
 Returns
 -------
 ret : int
@@ -391,9 +372,7 @@ int nfc_initiator_select_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, con
 
 
 %define nfc_initiator_poll_dep_target_doc
-"initiator_poll_dep_target_doc(pnd, ndm, nbr, pndiInitiator, timeout) -> (ret, pnt)
-
-Poll a target and request active or passive mode for D.E.P. (Data Exchange Protocol)
+"Poll a target and request active or passive mode for D.E.P. (Data Exchange Protocol).
 
 Parameters
 ----------
@@ -424,13 +403,13 @@ int nfc_initiator_poll_dep_target(nfc_device *pnd, const nfc_dep_mode ndm, const
 
 
 %define nfc_initiator_deselect_target_doc
-"initiator_deselect_target(pnd) -> ret
+"Deselect target.
 
 Parameters
 ----------
 pnd : nfc_device
     represents the currently used device
-  
+
 Returns
 -------
 ret : int
@@ -444,9 +423,7 @@ int nfc_initiator_deselect_target(nfc_device *pnd);
 
 
 %define nfc_initiator_transceive_bytes_doc
-"initiator_transceive_bytes(pnd, pbtTx, szTx, timeout) -> (ret, pbtRx)
-
-Send data to target then retrieve data from target.
+"Send data to target then retrieve data from target.
 
 Parameters
 ----------
@@ -478,9 +455,7 @@ int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const 
 
 
 %define nfc_initiator_transceive_bits_doc
-"initiator_transceive_bits(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (ret, pbtRx, pbtRxPar)
-
-Transceive raw bit-frames to a target.
+"Transceive raw bit-frames to a target.
 
 Parameters
 ----------
@@ -511,9 +486,7 @@ int nfc_initiator_transceive_bits(nfc_device *pnd, const uint8_t *pbtTx, const s
 
 
 %define nfc_initiator_transceive_bytes_timed_doc
-"initiator_transceive_bytes_timed(pnd, pbtTx, szTx, szRx) -> (ret, pbtRx, cycles)
-
-Send data to target then retrieve data from target. 
+"Send data to target then retrieve data from target.
 
 Parameters
 ----------
@@ -545,9 +518,7 @@ int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, 
 
 
 %define nfc_initiator_transceive_bits_timed_doc
-"initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, pbtTxPar, szRx) -> (ret, pbtRx, cycles)
-
-Transceive raw bit-frames to a target.
+"Transceive raw bit-frames to a target.
 
 Parameters
 ----------
@@ -579,9 +550,7 @@ int nfc_initiator_transceive_bits_timed(nfc_device *pnd, const uint8_t *pbtTx, c
 
 
 %define nfc_target_init_doc
-"target_init(pnd, pnt, timeout) -> (ret, pbtRx)
-
-Initialize NFC device as an emulated tag.
+"Initialize NFC device as an emulated tag.
 
 Parameters
 ----------
@@ -591,7 +560,7 @@ pnt : nfc_target
     wanted emulated target
 timeout : int
     timeout in milliseconds
-  
+
 Returns
 -------
 ret : int
@@ -606,9 +575,7 @@ int nfc_target_init(nfc_device *pnd, nfc_target *pnt, uint8_t *pbtRx, const size
 
 
 %define nfc_target_send_bytes_doc
-"target_send_bytes(pnd, pbtTx, timeout) -> ret
-
-Send bytes and APDU frames.
+"Send bytes and APDU frames.
 
 Parameters
 ----------
@@ -618,7 +585,7 @@ pbtTx : bytes
     Tx buffer 
 timeout : int
     timeout in milliseconds
-  
+
 Returns
 -------
 ret : int
@@ -631,9 +598,7 @@ int nfc_target_send_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t sz
 
 
 %define nfc_target_receive_bytes_doc
-"target_receive_bytes(pnd, szRx, timeout) -> (ret, pbtTx)
-
-Receive bytes and APDU frames.
+"Receive bytes and APDU frames.
 
 Parameters
 ----------
@@ -645,7 +610,7 @@ szRx : int
     size of Rx buffer
 timeout : int
     timeout in milliseconds
-  
+
 Returns
 -------
 ret : int
@@ -661,9 +626,7 @@ int nfc_target_receive_bytes(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx,
 
 
 %define nfc_target_send_bits_doc
-"target_send_bits(pnd, pbtTx, timeout) -> ret
-
-Send raw bit-frames.
+"Send raw bit-frames.
 
 Parameters
 ----------
@@ -687,9 +650,7 @@ int nfc_target_send_bits(nfc_device *pnd, const uint8_t *pbtTx, const size_t szT
 
 
 %define nfc_target_receive_bits_doc
-"target_receive_bits(pnd, szRx) -> (ret, pbtRx, pbtRxPar)
-
-Receive bit-frames.
+"Receive bit-frames.
 
 Parameters
 ----------
@@ -697,7 +658,7 @@ pnd : nfc_device
     currently used device
 szRx : int
     size of Rx buffer
-  
+
 Returns
 -------
 ret : int
@@ -705,9 +666,7 @@ ret : int
 pbtTx : bytes
     Rx buffer
 pbtRxPar : bytes
-    parameter contains a byte array of the corresponding parity bits
-
-"
+    parameter contains a byte array of the corresponding parity bits"
 %enddef
 %feature("autodoc", nfc_target_receive_bits_doc) nfc_target_receive_bits;
 int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, uint8_t *pbtRxPar);
@@ -716,20 +675,17 @@ int nfc_target_receive_bits(nfc_device *pnd, uint8_t *pbtRx, const size_t szRx, 
 
 
 %define nfc_strerror_doc
-"strerror(pnd) -> error
-
-Return the last error string.
+"Return the last error string.
 
 Parameters
 ----------
 pnd : nfc_device
     the currently used device
-  
+
 Returns
 -------
 error : string
-    error string  
-"
+    error string"
 %enddef
 %feature("autodoc", nfc_strerror_doc) nfc_strerror;
 const char *nfc_strerror(const nfc_device *pnd);
@@ -738,9 +694,7 @@ const char *nfc_strerror(const nfc_device *pnd);
 
 
 %define nfc_strerror_r_doc
-"strerror_r(pnd, buf, buflen) -> ret
-
-Renders the last error in buf for a maximum size of buflen chars. 
+"Render the last error in buf for a maximum size of buflen chars.
 
 Parameters
 ---------
@@ -764,9 +718,7 @@ int nfc_strerror_r(const nfc_device *pnd, char *buf, size_t buflen);
 
 
 %define nfc_perror_doc
-"perror(pnd, s)
-
-Display the last error occured on a nfc_device. 
+"Display the last error occured on a nfc_device.
 
 Parameters
 ---------
@@ -785,15 +737,13 @@ void nfc_perror(const nfc_device *pnd, const char *s);
 
 
 %define nfc_device_get_last_error_doc
-"device_get_last_error(pnd) -> ret
-
-Returns last error occured on a nfc_device. 
+"Return the last error occured on a nfc_device.
 
 Parameters
 ---------
 pnd : nfc_device
     currently used device
-  
+
 Returns
 -------
 ret : int
@@ -807,15 +757,13 @@ int nfc_device_get_last_error(const nfc_device *pnd);
 
 
 %define nfc_device_get_name_doc
-"device_get_name(pnd) -> name
-
-Returns the device name. 
+"Return the device name. 
 
 Parameters
 ----------
 pnd : nfc_device
     currently used device
-  
+
 Returns
 -------
 name : string
@@ -829,15 +777,13 @@ const char *nfc_device_get_name(nfc_device *pnd);
 
 
 %define nfc_device_get_connstring_doc
-"device_get_connstring(pnd) -> name
-
-Returns the device connection string. 
+"Return the device connection string. 
 
 Parameters
 ----------
 pnd : nfc_device
     currently used device
-  
+
 Returns
 -------
 name : string
@@ -850,9 +796,7 @@ const char *nfc_device_get_connstring(nfc_device *pnd);
 
 
 %define nfc_device_get_supported_modulation_doc
-"device_get_supported_modulation(pnd, mode) -> (ret, supported_mt)
-
-Get supported modulations.
+"Get supported modulations.
 
 Parameters
 ----------
@@ -860,7 +804,7 @@ pnd : nfc_device
     currently used device
 mode : nfc_mode
     mode
-  
+
 Returns
 -------
 ret : integet
@@ -876,9 +820,7 @@ int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  c
 
 
 %define nfc_device_get_supported_baud_rate_doc
-"device_get_supported_baud_rate_doc(pnd, mode, nmt) -> (ret, supported_br)
-
-Get supported baud rates.
+"Get supported baud rates.
 
 Parameters
 ----------
@@ -888,7 +830,7 @@ mode : nfc_mode
     possible values: N_TARGET, N_INITIATOR
 nmt : nfc_modulation_type
     desired modulation
-  
+
 Returns
 -------
 ret : integer
@@ -904,9 +846,7 @@ int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_typ
 
 
 %define nfc_device_set_property_int_doc
-"device_set_property_int(pnd, property, value) -> ret
-
-Set a device's integer-property value.
+"Set a device's integer-property value.
 
 Parameters
 ----------
@@ -930,9 +870,7 @@ int nfc_device_set_property_int(nfc_device *pnd, const nfc_property property, co
 
 
 %define nfc_device_set_property_bool_doc
-"device_set_property_bool(pnd, property, bEnable) -> ret
-
-Set a device's boolean-property value.
+"Set a device's boolean-property value.
 
 Parameters
 ----------
@@ -942,7 +880,7 @@ property : nfc_property
     property which will be set
 bEnable : bool
     activate/disactivate the property
-  
+
 Returns
 -------
 ret : int
@@ -1010,9 +948,7 @@ void nfc_free(void *p);
 
 
 %define nfc_version_doc
-"version(pnd) -> version
-
-Returns the library version. 
+"Return the library version. 
 
 Parameters
 ----------
@@ -1030,9 +966,7 @@ const char *nfc_version(void);
 
 
 %define nfc_device_get_information_about_doc
-"device_get_information_about(pnd) -> (ret, buf)
-
-Print information about NFC device.
+"Print information about NFC device.
 
 Parameters
 ----------
@@ -1054,9 +988,7 @@ int nfc_device_get_information_about(nfc_device *pnd, char **buf);
 
 
 %define str_nfc_modulation_type_doc
-"str_nfc_modulation_type(nmt) -> buf
-
-Convert nfc_modulation_type value to string.
+"Convert nfc_modulation_type value to string.
 
 Parameters
 ----------
@@ -1076,9 +1008,7 @@ const char *str_nfc_modulation_type(const nfc_modulation_type nmt);
 
 
 %define str_nfc_baud_rate_doc
-"str_nfc_baud_rate(nbr) -> buf
-
-Convert nfc_baud_rate value to string.
+"Convert nfc_baud_rate value to string.
 
 Parameters
 ----------
@@ -1098,9 +1028,7 @@ const char *str_nfc_baud_rate(const nfc_baud_rate nbr);
 
 
 %define str_nfc_target_doc
-"str_nfc_target(pnt, verbose) -> (ret, buf)
-
-Convert nfc_modulation_type value to string.
+"Convert nfc_modulation_type value to string.
 
 Parameters
 ----------
@@ -1154,35 +1082,33 @@ def convBytes(pData):
         byt = pData
     return byt
 
-    
+
 def print_hex(pbtData, szBytes):
     """
-    print bytes in hexadecimal
-    
+    Print bytes in hexadecimal.
+
     Parameters
     ----------
     pbtData : bytes
         bytes to print
     szBytes : int
         size in bytes
-    
     """
     for szPos in range(szBytes):
         sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
     print('')
-    
-    
+
+
 def print_hex_bits(pbtData, szBits):
     """
-    Print bits in hexadecimal
-        
+    Print bits in hexadecimal.
+
     Parameters
     ----------
     pbtData : bytes
         bits to print
     szBits : int
         size in bits
-    
     """
     szBytes = divmod(szBits, 8)[0]
     for szPos in range(szBytes):
@@ -1194,14 +1120,13 @@ def print_hex_bits(pbtData, szBits):
             sys.stdout.write("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
         else:
             sys.stdout.write("%02x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
-      
     print('')
 
-    
+
 def print_nfc_target(pnt, verbose):
     """
-    Print a nfc_target
-    
+    Print an nfc_target.
+
     Parameters
     ----------
     pnt : nfc_target 

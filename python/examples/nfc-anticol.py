@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Generates one ISO14443-A anti-collision process "by-hand"
-"""
+"""Generates one ISO14443-A anti-collision process "by-hand" """
 
 from __future__ import print_function
 import nfc
@@ -31,13 +30,12 @@ CASCADE_BIT = 0x04
 
 
 def transmit_bits(pbtTx, szTxBits):
-  
     cycles = 0
     # Show transmitted command
     if not quiet_output:
         print('Sent bits:     ', end='')
         nfc.print_hex_bits(pbtTx, szTxBits)
-    
+
     # Transmit the bit frame command, we don't use the arbitrary parity feature
     if timed:
         szRxBits, pbtRx, cycles = nfc.initiator_transceive_bits_timed(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN, 0 )
@@ -45,17 +43,17 @@ def transmit_bits(pbtTx, szTxBits):
             return False, pbtRx
         if (not quiet_output) and (szRxBits > 0):
             print("Response after %u cycles" % cycles)
-        
+
     else:
         szRxBits, pbtRx = nfc.initiator_transceive_bits(pnd, pbtTx, szTxBits, 0, MAX_FRAME_LEN, 0)
         if szRxBits < 0:
             return False, pbtRx
-    
+
     # Show received answer
     if not quiet_output:
         print('Received bits: ', end='')
         nfc.print_hex_bits(pbtRx, szRxBits)
-    
+
     # Succesful transfer
     return True, pbtRx
 
@@ -67,7 +65,7 @@ def transmit_bytes(pbtTx, szTx):
     if not quiet_output:
         print('Sent bits:     ', end='')
         nfc.print_hex(pbtTx, szTx)
-    
+
     # Transmit the bit frame command, we don't use the arbitrary parity feature
     if timed:
         szRx, pbtRx, cycles = nfc.initiator_transceive_bytes_timed(pnd, pbtTx, szTx, 0, abtRx, len(abtRx), 0 )
@@ -75,17 +73,17 @@ def transmit_bytes(pbtTx, szTx):
             return False, pbtRx
         if (not quiet_output) and (szRx > 0):
             print("Response after %u cycles" % cycles)
-        
+
     else:
         szRx, pbtRx = nfc.initiator_transceive_bytes(pnd, pbtTx, szTx, len(abtRx),  0)
         if szRx < 0:
             return False, pbtRx
-    
+
     # Show received answer
     if not quiet_output:
         print('Received bits: ', end='')
         nfc.print_hex(pbtRx, szRx)
-    
+
     # Succesful transfer
     return True, pbtRx
 
@@ -97,36 +95,33 @@ if pnd is None:
     print('ERROR: Unable to open NFC device.')
     nfc.exit(context)
     exit()
-    
+
 if(nfc.initiator_init(pnd)<0):
     nfc.perror(pnd, "nfc_initiator_init")
     nfc.close(pnd)
     nfc.exit(context)
     exit()
-    
-    
+
 if (nfc.device_set_property_bool(pnd, nfc.NP_HANDLE_CRC, False) < 0):
     nfc.perror(pnd, "nfc_device_set_property_bool")
     nfc.close(pnd)
     nfc.exit(context)
     exit()
-  
-    
+
 if (nfc.device_set_property_bool(pnd, nfc.NP_EASY_FRAMING, False) < 0):
     nfc.perror(pnd, "nfc_device_set_property_bool")
     nfc.close(pnd)
     nfc.exit(context)
     exit()
-    
-        
+
 if (nfc.device_set_property_bool(pnd, nfc.NP_AUTO_ISO14443_4, False) < 0):
     nfc.perror(pnd, "nfc_device_set_property_bool")
     nfc.close(pnd)
     nfc.exit(context)
     exit()
-    
+
 print("NFC reader:", nfc.device_get_name(pnd), "opened\n")
-  
+
 # Send the 7 bits request command specified in ISO 14443A (0x26)
 ret, abtRx = transmit_bits(abtReqa, 7)
 
@@ -135,7 +130,7 @@ if not ret:
     nfc.close(pnd)
     nfc.exit(context)
     exit()
-  
+
 abtAtqa = abtRx[0:2]
 
 ret, abtRx = transmit_bytes(abtSelectAll, 2)
@@ -143,10 +138,10 @@ ret, abtRx = transmit_bytes(abtSelectAll, 2)
 # Check answer
 if (abtRx[0] ^ abtRx[1] ^ abtRx[2] ^ abtRx[3] ^ abtRx[4]) != 0:
     print("WARNING: BCC check failed!")
-   
+
 # Save the UID CL1
 abtRawUid = abtRx[0:4]
-  
+
 # Prepare and send CL1 Select-Command
 abtSelectTag[2:7] = abtRx[0:5]
 nfc.iso14443a_crc_append(abtSelectTag, 7)
@@ -165,7 +160,6 @@ if szCL == 2:
     # Check answer
     if (abtRx[0] ^ abtRx[1] ^ abtRx[2] ^ abtRx[3] ^ abtRx[4]) != 0:
         print("WARNING: BCC check failed!")
-    
 
     # Save UID CL2
     abtRawUid[4:8] = abtRx[0:4]
@@ -196,7 +190,6 @@ if szCL == 2:
         # Check answer
         if (abtRx[0] ^ abtRx[1] ^ abtRx[2] ^ abtRx[3] ^ abtRx[4]) != 0:
             print("WARNING: BCC check failed!")
-        
 
         # Save UID CL3
         abtRawUid[8:12]= abtRx[0:4]
@@ -212,15 +205,14 @@ if szCL == 2:
     # Request ATS, this only applies to tags that support ISO 14443A-4
     if abtRx[0] & nfc.SAK_FLAG_ATS_SUPPORTED:
         iso_ats_supported = True
-    
+
     if (abtRx[0] & SAK_FLAG_ATS_SUPPORTED) or force_rats:
         iso14443a_crc_append(abtRats, 2)
         ret, abtRx = transmit_bytes(abtRats, 4)
         if (ret):
           abtAts = abtRx
           szAts = len(abtRx)
-        
-    
+
 
 # Done, halt the tag now
 nfc.iso14443a_crc_append(abtHalt, 2)

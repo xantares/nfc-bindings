@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Lists the first target present of each found device
-"""
+"""Lists the first target present of each found device"""
 
 from __future__ import print_function
 import nfc
@@ -36,7 +35,7 @@ for i in range(szDeviceFound):
         nfc.close(pnd)
         nfc.exit(context)
         exit()
-        
+
     print("NFC reader:", nfc.device_get_name(pnd), "opened")   
 
     nm = nfc.modulation()
@@ -53,4 +52,3 @@ for i in range(szDeviceFound):
                 print('')
     nfc.close(pnd)
 nfc.exit(context)
-    

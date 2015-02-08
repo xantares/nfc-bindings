@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Turns the NFC device into a D.E.P. target (see NFCIP-1)
-"""
+"""Turns the NFC device into a D.E.P. target (see NFCIP-1)"""
 
 from __future__ import print_function
 import nfc
@@ -17,15 +16,14 @@ def stop_dep_communication(pnd, context):
     else:
         nfc.exit(context)
         exit()
-    
-    
+
 abtTx = b'Hello Mars!'
 
 context = nfc.init()
 if context is None:
     print("Unable to init libnfc")
     exit()
-  
+
 MAX_DEVICE_COUNT = 2
 
 connstrings = nfc.list_devices(context, MAX_DEVICE_COUNT)
@@ -39,7 +37,7 @@ else:
     print("No device found.")
     nfc.exit(context)
     exit()
-  
+
 nt = nfc.target()
 nt.nm.nmt = nfc.NMT_DEP
 nt.nm.nbr = nfc.NBR_UNDEFINED
