@@ -5,7 +5,7 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 add_definitions (-DHAVE_CONFIG_H)
 set (CMAKE_SWIG_FLAGS "-ignoremissing")
 
-if (PYTHON_BINDINGS)
+if (BUILD_PYTHON)
   # workaround for cmake bug #0013449
   if ( NOT DEFINED CMAKE_FIND_ROOT_PATH )
     find_package ( SWIG )
