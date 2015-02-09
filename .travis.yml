@@ -1,7 +1,7 @@
 language: cpp
 before_install:
   - sudo apt-get install libusb-dev
-  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && git checkout tags/libnfc-1.7.1 && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install && popd
+  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && git checkout tags/libnfc-1.7.1 && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install -j4 && popd
   - sudo apt-get install swig python-dev
 compiler: gcc
 
@@ -10,5 +10,5 @@ before_script:
 
 script:
   - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/../libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/../libnfc/install/include ..
-  - make install
+  - make install -j4
   - LD_LIBRARY_PATH=$PWD/../libnfc/install/lib/ PYTHONPATH=$PWD/install/lib/python2.7/site-packages python ../python/examples/quick_start_example.py
