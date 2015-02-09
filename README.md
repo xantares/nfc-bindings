@@ -15,7 +15,7 @@ Example
 
     import nfc
     context = nfc.init()
-    pnd = nfc.open(context, 0)
+    pnd = nfc.open(context)
     if pnd is not None:
         if(nfc.initiator_init(pnd)<0):
             print('NFC reader: %s opened' % nfc.device_get_name(pnd))

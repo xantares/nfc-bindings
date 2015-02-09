@@ -1,7 +1,7 @@
 /* File: nfc.i */
 
 %module(docstring="Bindings for libnfc") nfc
-%feature("autodoc","1");
+//%feature("autodoc","1");
 
 %{
 #include <stdbool.h>
@@ -84,9 +84,7 @@ void nfc_init(nfc_context **context);
 
 
 %define nfc_exit_doc
-"exit(context)
-
-Deinitialize libnfc. Should be called after closing all open devices and before your application terminates. 
+"Deinitialize libnfc. Should be called after closing all open devices and before your application terminates. 
 
 Parameters
 ----------
@@ -113,7 +111,7 @@ Returns
 pnd : nfc_device
     device if successfull, else None"
 %enddef
-%feature("autodoc", nfc_open_doc) nfc_open;
+//%feature("autodoc", nfc_open_doc) nfc_open;
 //%newobject nfc_open;
 %typemap(newfree) nfc_device * "nfc_close($1);";
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) const nfc_connstring {
