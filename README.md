@@ -10,6 +10,22 @@ For now only Python bindings are supported (2.x and 3.x), with full docstrings.
 
 Alternative Python bindings are provided by PyNFC (http://code.google.com/p/pynfc/source/list), which is somewhat higher-level, while the API does not seem to be fully covered.
 
+Requirements
+------------
+
+  * libnfc >= 1.7.1
+  * cmake
+  * swig
+  * python
+
+Install
+-------
+
+    git clone https://github.com/xantares/nfc-bindings.git
+    cd nfc-bindings
+    cmake -DCMAKE_INSTALL_PREFIX=~/.local
+    make install
+
 Example
 -------
 
@@ -24,18 +40,5 @@ Example
 
 Find more examples in https://github.com/xantares/nfc-bindings/tree/master/python/examples
 
-Requirements
-------------
 
-  * libnfc >= 1.7.1
-  * cmake
-  * swig
-  * python
 
-Build
------
-
-    git clone https://github.com/xantares/nfc-bindings.git
-    cd nfc-bindings
-    cmake -DCMAKE_INSTALL_PREFIX=$PWD/install .
-    make install
