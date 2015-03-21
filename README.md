@@ -23,7 +23,7 @@ Install
 
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings
-    cmake -DCMAKE_INSTALL_PREFIX=~/.local
+    cmake -DCMAKE_INSTALL_PREFIX=~/.local .
     make install
 
 Example
