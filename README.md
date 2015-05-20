@@ -13,7 +13,7 @@ Alternative Python bindings are provided by PyNFC (http://code.google.com/p/pynf
 Requirements
 ------------
 
-  * libnfc >= 1.7.1
+  * libnfc = 1.7.1
   * cmake
   * swig
   * python
