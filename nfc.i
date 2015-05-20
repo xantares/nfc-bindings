@@ -824,8 +824,6 @@ Parameters
 ----------
 pnd : nfc_device
     currently used device
-mode : nfc_mode
-    possible values: N_TARGET, N_INITIATOR
 nmt : nfc_modulation_type
     desired modulation
 
