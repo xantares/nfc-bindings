@@ -3,7 +3,8 @@ option (LINK_PYTHON_LIBRARY "Link against python libraries" ON )
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
 add_definitions (-DHAVE_CONFIG_H)
-set (CMAKE_SWIG_FLAGS "-ignoremissing")
+set (CMAKE_SWIG_FLAGS "-threads -ignoremissing")
+SEPARATE_ARGUMENTS(CMAKE_SWIG_FLAGS)
 
 if (BUILD_PYTHON)
   # workaround for cmake bug #0013449
@@ -27,6 +28,7 @@ if (SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
 
   swig_add_module (nfc python ../nfc.i) 
   swig_link_libraries (nfc ${LIBNFC_LIBRARIES})
+
 
   if (LINK_PYTHON_LIBRARY)
     swig_link_libraries (nfc ${PYTHON_LIBRARIES})
