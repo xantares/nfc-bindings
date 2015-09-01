@@ -1,4 +1,5 @@
 language: cpp
+sudo: no
 
 addons:
   apt:
@@ -13,6 +14,7 @@ before_install:
   - git checkout tags/libnfc-1.7.1
   - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ .
   - make install -j2
+  - popd
 
 script:
   - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARY=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=~/.local/include .
