@@ -17,6 +17,6 @@ before_install:
   - popd
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARY=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=~/.local/include .
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARYX=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIRX=~/.local/include .
   - make install -j2
   - LD_LIBRARY_PATH=~/.local/lib/ python python/examples/quick_start_example.py
