@@ -8,7 +8,7 @@ addons:
     - python-dev
     - libusb-dev
 
-before_install:
+install:
   - git clone https://github.com/nfc-tools/libnfc.git
   - pushd libnfc
   - git checkout tags/libnfc-1.7.1
