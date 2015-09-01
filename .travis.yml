@@ -1,14 +1,21 @@
 language: cpp
-before_install:
-  - sudo apt-get install libusb-dev
-  - git clone https://code.google.com/p/libnfc/ && pushd libnfc && git checkout tags/libnfc-1.7.1 && cmake -DCMAKE_INSTALL_PREFIX=$PWD/install && make install -j4 && popd
-  - sudo apt-get install swig python-dev
-compiler: gcc
 
-before_script:
-  - mkdir build && pushd build
+addons:
+  apt:
+    packages:
+    - swig
+    - python-dev
+    - libusb-dev
+
+before_install:
+  - git clone https://github.com/nfc-tools/libnfc.git
+  - pushd libnfc
+  - git checkout tags/libnfc-1.7.1
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/
+  - make install -j2
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=$PWD/install -DLIBNFC_LIBRARY=$PWD/../libnfc/install/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=$PWD/../libnfc/install/include ..
-  - make install -j4
-  - LD_LIBRARY_PATH=$PWD/../libnfc/install/lib/ PYTHONPATH=$PWD/install/lib/python2.7/site-packages python ../python/examples/quick_start_example.py
+  - mkdir build && pushd build
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARY=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=~/.local/include ..
+  - make install -j2
+  - LD_LIBRARY_PATH=~/.local/lib/ python ../python/examples/quick_start_example.py
