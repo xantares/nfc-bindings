@@ -11,11 +11,10 @@ before_install:
   - git clone https://github.com/nfc-tools/libnfc.git
   - pushd libnfc
   - git checkout tags/libnfc-1.7.1
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ .
   - make install -j2
 
 script:
-  - mkdir build && pushd build
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARY=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=~/.local/include ..
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBNFC_LIBRARY=~/.local/lib/libnfc.so -DLIBNFC_INCLUDE_DIR=~/.local/include .
   - make install -j2
   - LD_LIBRARY_PATH=~/.local/lib/ python ../python/examples/quick_start_example.py
