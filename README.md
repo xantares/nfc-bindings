@@ -8,7 +8,7 @@ The project goal is to provide scripting language bindings for libnfc (http://ww
 
 For now only Python bindings are supported (2.x and 3.x), with full docstrings.
 
-Alternative Python bindings are provided by PyNFC (http://code.google.com/p/pynfc/source/list), which is somewhat higher-level, while the API does not seem to be fully covered.
+Alternative Python bindings are provided by PyNFC (https://github.com/ikelos/pynfc), which is somewhat higher-level, while the API does not seem to be fully covered.
 
 Requirements
 ------------
