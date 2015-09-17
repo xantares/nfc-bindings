@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/xantares/nfc-bindings.svg?branch=master)](https://travis-ci.org/xantares/nfc-bindings)
+
 nfc-bindings
 ============
 
