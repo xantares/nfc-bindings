@@ -904,7 +904,12 @@ void iso14443a_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 void iso14443a_crc_append(uint8_t *pbtData, size_t szLen);
 
 
+#ifdef NO_ISO14443B_CRC
 
+%ignore iso14443b_crc;
+%ignore iso14443b_crc_append;
+
+#else
 
 %define iso14443b_crc_doc
 "iso14443b_crc(pbtData, szLen, pbtCrc)"
@@ -913,15 +918,13 @@ void iso14443a_crc_append(uint8_t *pbtData, size_t szLen);
 void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 
 
-
-
 %define iso14443b_crc_append_doc
 "iso14443b_crc_append(pbtData, szLen)"
 %enddef
 %feature("autodoc", iso14443b_crc_append_doc) iso14443b_crc_append;
 void iso14443b_crc_append(uint8_t *pbtData, size_t szLen);
 
-
+#endif
 
 
 %define iso14443a_locate_historical_bytes_doc

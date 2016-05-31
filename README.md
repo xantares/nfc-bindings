@@ -15,18 +15,19 @@ Alternative Python bindings are provided by PyNFC (https://github.com/ikelos/pyn
 Requirements
 ------------
 
-  * libnfc = 1.7.1
+  * libnfc >= 1.7.1
   * cmake
   * swig
   * python
 
-Install
--------
+Quickstart
+----------
 
     git clone https://github.com/xantares/nfc-bindings.git
     cd nfc-bindings
     cmake -DCMAKE_INSTALL_PREFIX=~/.local .
     make install
+    python python/examples/quick_start_example.py
 
 Example
 -------
