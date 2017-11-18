@@ -13,12 +13,12 @@ context = nfc.init()
 pnd = nfc.open(context)
 if pnd is None:
     print('ERROR: Unable to open NFC device.')
-    sys.exit(0)
+    sys.exit(1)
 
 if nfc.initiator_init(pnd) < 0:
     nfc.perror(pnd, "nfc_initiator_init")
     print('ERROR: Unable to init NFC device.')
-    sys.exit(0)
+    sys.exit(1)
 
 print('NFC reader: %s opened' % nfc.device_get_name(pnd))
 
