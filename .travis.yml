@@ -1,5 +1,5 @@
 language: cpp
-sudo: no
+sudo: false
 
 addons:
   apt:
