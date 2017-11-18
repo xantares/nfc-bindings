@@ -16,6 +16,22 @@ if (NOT HAS_ISO14443B_CRC)
   add_definitions(-DNO_ISO14443B_CRC)
 endif ()
 
+
+# workaround for cmake bug #0013449
+if (CMAKE_VERSION VERSION_LESS 3 AND DEFINED CMAKE_FIND_ROOT_PATH)
+  find_program (SWIG_EXECUTABLE NAMES swig2.0 swig)
+  if (SWIG_EXECUTABLE)
+    set (SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake)
+    set (SWIG_FOUND TRUE)
+  else ()
+    message (SEND_ERROR "SWIG not found")
+  endif ()
+else ()
+  find_package (SWIG REQUIRED)
+endif ()
+include (${SWIG_USE_FILE})
+
+
 option (BUILD_PYTHON "Build python bindings" ON)
 if (BUILD_PYTHON)
   add_subdirectory (python)

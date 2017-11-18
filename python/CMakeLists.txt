@@ -5,27 +5,19 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 add_definitions (-DHAVE_CONFIG_H)
 list (APPEND CMAKE_SWIG_FLAGS "-ignoremissing")
 
-if (BUILD_PYTHON)
-  # workaround for cmake bug #0013449
-  if ( NOT DEFINED CMAKE_FIND_ROOT_PATH )
-    find_package ( SWIG )
-  else ()
-    find_program ( SWIG_EXECUTABLE NAMES swig2.0 swig )
-    if ( SWIG_EXECUTABLE )
-      set ( SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake )
-      set ( SWIG_FOUND TRUE )
-    endif ()
-  endif ()
-  find_package ( PythonLibs )
-  find_package ( PythonInterp )
-endif ()
+find_package (PythonInterp)
+find_package (PythonLibs)
 
-if (SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
-  include (UseSWIG)
+if (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
   include_directories (${PYTHON_INCLUDE_DIRS})
   link_directories (${CMAKE_CURRENT_BINARY_DIR}/../src)
 
-  swig_add_module (nfc python ../nfc.i) 
+  if (CMAKE_VERSION VERSION_LESS 3.8)
+    swig_add_module (nfc python ../nfc.i)
+  else ()
+    swig_add_library (nfc LANGUAGE python SOURCES ../nfc.i)
+  endif ()
+
   swig_link_libraries (nfc ${LIBNFC_LIBRARIES})
 
   if (LINK_PYTHON_LIBRARY)
@@ -34,7 +26,7 @@ if (SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
 
   set_target_properties (${SWIG_MODULE_nfc_REAL_NAME} PROPERTIES NO_SONAME ON)
 
-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print( sysconfig.get_python_lib( plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}' ) )"
+  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib( plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}'))"
                     OUTPUT_VARIABLE _ABS_PYTHON_MODULE_PATH
                     OUTPUT_STRIP_TRAILING_WHITESPACE )
 
