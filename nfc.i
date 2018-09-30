@@ -49,7 +49,7 @@ uint8_t_static_in_helper(abtNFCID3, 10)
 uint8_t_static_in_helper(abtGB, 48)
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
-  $1 = checkPyBytes($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
+  $1 = checkPyBytes($input) || (checkPyInt($input) && (fromPyInt($input)==0))
 }
 %typemap(in) uint8_t * %{
   $1 = 0;
@@ -446,7 +446,11 @@ pbtRx : bytes
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_doc) nfc_initiator_transceive_bytes;
 %typemap(in,numinputs=1) (uint8_t *pbtRx, const size_t szRx) %{ $2 = PyInt_AsLong($input);$1 = (uint8_t *)calloc($2,sizeof(uint8_t)); %}
-%typemap(argout) (uint8_t *pbtRx, const size_t szRx) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, toPyBytesSize((uint8_t *)$1, $2)); free($1); %}
+%typemap(argout) (uint8_t *pbtRx, const size_t szRx) %{
+if (result<0)
+  $2=0;
+$result = SWIG_Python_AppendOutput($result, toPyBytesSize((uint8_t *)$1, $2)); free($1);
+%}
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
 
