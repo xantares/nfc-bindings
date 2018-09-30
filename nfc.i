@@ -59,8 +59,6 @@ uint8_t_static_in_helper(abtGB, 48)
 %}
 
 
-
-
 %define nfc_init_doc
 "init() -> context
 
@@ -267,6 +265,14 @@ ret : int
     libnfc's error code
 "
 %enddef
+
+// allow to interrupt this blocking call
+%exception nfc_initiator_select_passive_target {
+    Py_BEGIN_ALLOW_THREADS
+    $action
+    Py_END_ALLOW_THREADS
+}
+
 %feature("autodoc", nfc_initiator_select_passive_target_doc) nfc_initiator_select_passive_target;
 int nfc_initiator_select_passive_target(nfc_device *pnd, const nfc_modulation nm, const uint8_t *pbtInitData, const size_t szInitData, nfc_target *pnt);
 
@@ -333,6 +339,14 @@ pnt : nfc_target
     (over)writable struct 
 "
 %enddef
+
+// allow to interrupt this blocking call
+%exception nfc_initiator_poll_target {
+    Py_BEGIN_ALLOW_THREADS
+    $action
+    Py_END_ALLOW_THREADS
+}
+
 %feature("autodoc", nfc_initiator_poll_target_doc) nfc_initiator_poll_target;
 int nfc_initiator_poll_target(nfc_device *pnd, const nfc_modulation *pnmTargetTypes, const size_t szTargetTypes, const uint8_t uiPollNr, const uint8_t uiPeriod, nfc_target *pnt);
 
@@ -1138,5 +1152,15 @@ def print_nfc_target(pnt, verbose):
         verbosity flag
     """
     ret, s = str_nfc_target(pnt, verbose)
-    sys.stdout.write(s)    
+    sys.stdout.write(s)
+
+
+# Reset the default Crtl-C behavior
+import signal
+try:
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+except ValueError:
+    pass
 %}
+
+

@@ -4,6 +4,7 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
 add_definitions (-DHAVE_CONFIG_H)
 list (APPEND CMAKE_SWIG_FLAGS "-ignoremissing")
+separate_arguments (CMAKE_SWIG_FLAGS)
 
 find_package (PythonInterp)
 find_package (PythonLibs)
