@@ -1,4 +1,3 @@
-option (LINK_PYTHON_LIBRARY "Link against python libraries" ON )
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -18,11 +17,8 @@ if (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     swig_add_library (nfc LANGUAGE python SOURCES ../nfc.i)
   endif ()
 
-  swig_link_libraries (nfc ${LIBNFC_LIBRARIES})
-
-  if (LINK_PYTHON_LIBRARY)
-    swig_link_libraries (nfc ${PYTHON_LIBRARIES})
-  endif ()
+  target_link_libraries (${SWIG_MODULE_nfc_REAL_NAME} ${LIBNFC_LIBRARIES})
+  target_link_libraries_with_dynamic_lookup (${SWIG_MODULE_nfc_REAL_NAME} ${PYTHON_LIBRARIES})
 
   set_target_properties (${SWIG_MODULE_nfc_REAL_NAME} PROPERTIES NO_SONAME ON)
 

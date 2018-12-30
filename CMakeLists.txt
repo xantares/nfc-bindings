@@ -20,6 +20,7 @@ if (NOT HAS_ISO14443B_CRC)
   add_definitions(-DNO_ISO14443B_CRC)
 endif ()
 
+include (TargetLinkLibrariesWithDynamicLookup)
 
 # workaround for cmake bug #0013449
 if (CMAKE_VERSION VERSION_LESS 3 AND DEFINED CMAKE_FIND_ROOT_PATH)
