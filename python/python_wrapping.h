@@ -1,7 +1,7 @@
 
 #include "Python.h"
 
-inline PyObject* toPyString(const char *buf)
+PyObject* toPyString(const char *buf)
 {
 #if PY_MAJOR_VERSION >= 3
   return PyUnicode_FromString(buf);
@@ -10,7 +10,7 @@ inline PyObject* toPyString(const char *buf)
 #endif
 }
 
-inline char* fromPyString(PyObject * pyObj)
+char* fromPyString(PyObject * pyObj)
 {
 #if PY_MAJOR_VERSION >= 3
   return PyBytes_AsString(PyUnicode_AsUTF8String(pyObj));
@@ -19,7 +19,7 @@ inline char* fromPyString(PyObject * pyObj)
 #endif
 }
 
-inline int checkPyString(PyObject * pyObj)
+int checkPyString(PyObject * pyObj)
 {
 #if PY_MAJOR_VERSION >= 3
   return PyUnicode_Check(pyObj);
@@ -28,7 +28,7 @@ inline int checkPyString(PyObject * pyObj)
 #endif
 }
 
-inline int checkPyBytes(PyObject * pyObj)
+int checkPyBytes(PyObject * pyObj)
 {
 #if PY_MAJOR_VERSION >= 3
   return PyBytes_Check(pyObj)||PyByteArray_Check(pyObj);
@@ -37,7 +37,7 @@ inline int checkPyBytes(PyObject * pyObj)
 #endif
 }
 
-inline char* fromPyBytes(PyObject * pyObj)
+char* fromPyBytes(PyObject * pyObj)
 {
   if(PyByteArray_Check(pyObj))
     return PyByteArray_AsString(pyObj);
@@ -52,7 +52,7 @@ inline char* fromPyBytes(PyObject * pyObj)
   return 0;
 }
 
-inline PyObject* toPyBytes(const char *buf)
+PyObject* toPyBytes(const char *buf)
 {
   return PyBytes_FromString(buf);
 // #if PY_MAJOR_VERSION >= 3
@@ -62,7 +62,7 @@ inline PyObject* toPyBytes(const char *buf)
 // #endif
 }
 
-inline PyObject* toPyBytesSize(const char *buf, int size)
+PyObject* toPyBytesSize(const char *buf, int size)
 {
   return PyByteArray_FromStringAndSize(buf, size);
 // #if PY_MAJOR_VERSION >= 3
@@ -72,7 +72,7 @@ inline PyObject* toPyBytesSize(const char *buf, int size)
 // #endif
 }
 
-inline int checkPyInt(PyObject * pyObj)
+int checkPyInt(PyObject * pyObj)
 {
 #if PY_MAJOR_VERSION >= 3
   return PyLong_Check(pyObj);
@@ -81,7 +81,7 @@ inline int checkPyInt(PyObject * pyObj)
 #endif
 }
 
-inline long fromPyInt(PyObject * pyObj)
+long fromPyInt(PyObject * pyObj)
 {
   return PyLong_AsUnsignedLong(pyObj);
 }
