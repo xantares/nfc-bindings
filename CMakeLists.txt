@@ -2,6 +2,10 @@ cmake_minimum_required (VERSION 2.8)
 
 project (nfc-bindings C)
 
+if (POLICY CMP0078)
+  cmake_policy (SET CMP0078 NEW)
+endif ()
+
 option (INSTALL_EXAMPLES "install examples" ON)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
