@@ -1,7 +1,6 @@
 /* File: nfc.i */
 
 %module(docstring="Bindings for libnfc") nfc
-//%feature("autodoc","1");
 
 %{
 #include <stdbool.h>
@@ -19,7 +18,7 @@
 %typemap(out) uint8_t = int;
 
 %define uint8_t_static_out_helper(name, size)
-%typemap(out) uint8_t name[size] { $result = toPyBytesSize($1, size); }
+%typemap(out) uint8_t name[size] { $result = PyByteArray_FromStringAndSize((char *)$1, size); }
 %enddef
 
 uint8_t_static_out_helper(abtNFCID3, 10)
@@ -32,7 +31,7 @@ uint8_t_static_out_helper(abtAts, 254)
 %define uint8_t_static_in_helper(name, size)
 %typemap(in) uint8_t name[size] %{
 int len = PySequence_Size($input);
-uint8_t * vs = fromPyBytes($input);
+uint8_t * vs = (uint8_t *)fromPyBytes($input);
 int max_len = size;
 if (len <size)
     max_len = len;
@@ -49,12 +48,12 @@ uint8_t_static_in_helper(abtNFCID3, 10)
 uint8_t_static_in_helper(abtGB, 48)
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
-  $1 = checkPyBytes($input) || (checkPyInt($input) && (fromPyInt($input)==0))
+  $1 = checkPyBytes($input) || (checkPyInt($input) && (PyLong_AsUnsignedLong($input)==0))
 }
 %typemap(in) uint8_t * %{
   $1 = 0;
-  if(checkPyBytes($input)) {
-    $1 = fromPyBytes($input);
+  if (checkPyBytes($input)) {
+    $1 = (uint8_t *)fromPyBytes($input);
   }
 %}
 
@@ -72,7 +71,7 @@ context : nfc_context
 %feature("autodoc", nfc_init_doc) nfc_init;
 //%newobject nfc_init;
 %typemap(in,numinputs=0) SWIGTYPE** OUTPUT ($*ltype temp) %{ $1 = &temp; %}
-%typemap(argout) SWIGTYPE** OUTPUT %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((void*)*$1,$*descriptor,0)); %}
+%typemap(argout) SWIGTYPE** OUTPUT %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1,$*descriptor,0)); %}
 %apply SWIGTYPE** OUTPUT { nfc_context **context };
 void nfc_init(nfc_context **context);
 %clear nfc_context **context;
@@ -113,7 +112,7 @@ pnd : nfc_device
 //%newobject nfc_open;
 %typemap(newfree) nfc_device * "nfc_close($1);";
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) const nfc_connstring {
-  $1 = checkPyString($input) ||(checkPyInt($input) && (fromPyInt($input)==0))
+  $1 = checkPyString($input) ||(checkPyInt($input) && (PyLong_AsUnsignedLong($input)==0))
 }
 %typemap(in) const nfc_connstring %{
   $1 = 0;
@@ -303,9 +302,9 @@ ant : array of nfc_target
 %typemap(in,numinputs=1) (nfc_target ant[], const size_t szTargets) %{ $2 = PyInt_AsLong($input);$1 = (nfc_target *)calloc($2,sizeof(nfc_target)); %}
 %typemap(argout) (nfc_target ant[], const size_t szTargets) %{
   PyObject * ant = PyList_New(result);
-  size_t i;
+  int i;
   for(i = 0; i < result; ++i) {
-    PyObject * target = SWIG_NewPointerObj((void*)&($1[i]),$descriptor,0);
+    PyObject * target = SWIG_NewPointerObj(&($1[i]),$descriptor,0);
     PyList_SetItem( ant, i, target );
   }
   $result = SWIG_Python_AppendOutput($result, ant);
@@ -463,7 +462,7 @@ pbtRx : bytes
 %typemap(argout) (uint8_t *pbtRx, const size_t szRx) %{
 if (result<0)
   $2=0;
-$result = SWIG_Python_AppendOutput($result, toPyBytesSize((uint8_t *)$1, $2)); free($1);
+$result = SWIG_Python_AppendOutput($result, PyByteArray_FromStringAndSize((char *)$1, $2)); free($1);
 %}
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
@@ -529,7 +528,7 @@ cycles : int
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
 %typemap(in,numinputs=0) uint32_t *cycles ($*ltype temp) %{ temp = 0; $1 = &temp; %}
-%typemap(argout) uint32_t *cycles %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj((void*)*$1,$*descriptor,0)); %}
+%typemap(argout) uint32_t *cycles %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1,$*descriptor,0)); %}
 int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
 
 

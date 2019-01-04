@@ -12,9 +12,9 @@ if (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
   include_directories (${PYTHON_INCLUDE_DIRS})
 
   if (CMAKE_VERSION VERSION_LESS 3.8)
-    swig_add_module (nfc python ../nfc.i)
+    swig_add_module (nfc python ../nfc.i python_wrapping.c)
   else ()
-    swig_add_library (nfc LANGUAGE python SOURCES ../nfc.i)
+    swig_add_library (nfc LANGUAGE python SOURCES ../nfc.i python_wrapping.c)
   endif ()
 
   target_link_libraries (${SWIG_MODULE_nfc_REAL_NAME} ${LIBNFC_LIBRARIES})
