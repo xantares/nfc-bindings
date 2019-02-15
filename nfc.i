@@ -1091,14 +1091,6 @@ __version__ = version()
 import sys
 
 
-def convBytes(pData):
-    if sys.version_info[0] < -3:  # python 2
-        byt = ord(pData)
-    else:
-        byt = pData
-    return byt
-
-
 def print_hex(pbtData, szBytes):
     """
     Print bytes in hexadecimal.
@@ -1111,7 +1103,7 @@ def print_hex(pbtData, szBytes):
         size in bytes
     """
     for szPos in range(szBytes):
-        sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
+        sys.stdout.write("%02x  " % pbtData[szPos])
     print('')
 
 
@@ -1128,14 +1120,14 @@ def print_hex_bits(pbtData, szBits):
     """
     szBytes = divmod(szBits, 8)[0]
     for szPos in range(szBytes):
-        sys.stdout.write("%02x  " % convBytes(pbtData[szPos]))
+        sys.stdout.write("%02x  " % pbtData[szPos])
     uRemainder = szBits % 8
     # Print the rest bits
     if uRemainder != 0:
         if (uRemainder < 5):
-            sys.stdout.write("%01x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
+            sys.stdout.write("%01x (%d bits)" % (pbtData[szBytes], uRemainder))
         else:
-            sys.stdout.write("%02x (%d bits)" % (convBytes(pbtData[szBytes]), uRemainder))
+            sys.stdout.write("%02x (%d bits)" % (pbtData[szBytes], uRemainder))
     print('')
 
 
