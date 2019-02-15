@@ -6,6 +6,7 @@ addons:
     packages:
     - swig
     - python-dev
+    - python3-dev
     - libusb-dev
 
 install:
@@ -17,6 +18,10 @@ install:
   - popd
 
 script:
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ .
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DPYTHON_EXECUTABLE=/usr/bin/python2 .
   - make install -j2
-  - LD_LIBRARY_PATH=~/.local/lib/ python python/examples/quick_start_example.py || echo "nop"
+  - LD_LIBRARY_PATH=~/.local/lib/ python2 python/examples/quick_start_example.py || echo "nop"
+  - rm CMakeCache.txt
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local/ -DPYTHON_EXECUTABLE=/usr/bin/python3 .
+  - make install -j2
+  - LD_LIBRARY_PATH=~/.local/lib/ python3 python/examples/quick_start_example.py || echo "nop"
