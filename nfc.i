@@ -38,12 +38,12 @@ int len = PySequence_Size($input);
 if (len > size)
     SWIG_exception(SWIG_RuntimeError, "expected at most size elements in array argument");
 uint8_t res[size];
-
-memcpy(res, vs, len < size ? len : size);
+int max_len = len < size ? len : size;
+memcpy(res, vs, max_len * sizeof(uint8_t));
 $1 = res;
 %}
 %typemap(memberin) uint8_t name[size] %{
-memcpy($1, $input, size * sizeof(uint8_t));
+memcpy($1, $input, max_len * sizeof(uint8_t));
 %}
 %enddef
 
