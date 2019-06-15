@@ -18,18 +18,8 @@
 %typemap(in) uint8_t = int;
 %typemap(out) uint8_t = int;
 
-%define uint8_t_static_out_helper(name, size)
+%define uint8_t_array_member_helper(name, size)
 %typemap(out) uint8_t name[size] { $result = PyByteArray_FromStringAndSize((char *)$1, size); }
-%enddef
-
-uint8_t_static_out_helper(abtNFCID3, 10)
-uint8_t_static_out_helper(abtGB, 48)
-
-uint8_t_static_out_helper(abtAtqa, 2)
-uint8_t_static_out_helper(abtUid, 10)
-uint8_t_static_out_helper(abtAts, 254)
-
-%define uint8_t_static_in_helper(name, size)
 %typemap(in) uint8_t name[size] %{
 uint8_t * vs = (uint8_t *)fromPyBytes($input);
 if (!vs)
@@ -47,12 +37,23 @@ memcpy($1, $input, max_len * sizeof(uint8_t));
 %}
 %enddef
 
-// nfc_dep_info
-uint8_t_static_in_helper(abtGB, 48)
-uint8_t_static_in_helper(abtNFCID3, 10)
 
-// nfc_iso14443a_info
-uint8_t_static_in_helper(abtUid, 10)
+uint8_t_array_member_helper(abtNFCID3, 10)
+uint8_t_array_member_helper(abtGB, 48)
+uint8_t_array_member_helper(abtAtqa, 2)
+uint8_t_array_member_helper(abtUid, 10)
+uint8_t_array_member_helper(abtAts, 254)
+uint8_t_array_member_helper(abtId, 8)
+uint8_t_array_member_helper(abtPad, 8)
+uint8_t_array_member_helper(abtSysCode, 2)
+uint8_t_array_member_helper(abtPupi, 4)
+uint8_t_array_member_helper(abtApplicationData, 4)
+uint8_t_array_member_helper(abtProtocolInfo, 3)
+uint8_t_array_member_helper(abtDIV, 4)
+uint8_t_array_member_helper(abtAtr, 33)
+uint8_t_array_member_helper(abtUID, 4)
+uint8_t_array_member_helper(abtUID, 8)
+uint8_t_array_member_helper(abtData, 32)
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
   $1 = checkPyBytes($input) || (checkPyInt($input) && (PyLong_AsUnsignedLong($input)==0))
