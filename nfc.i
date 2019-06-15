@@ -9,6 +9,7 @@
 %}
 
 %include <typemaps.i>
+%include <exception.i>
 %include <cstring.i>
 %rename("%(strip:[nfc_])s") "";
 
@@ -22,7 +23,7 @@
 %enddef
 
 uint8_t_static_out_helper(abtNFCID3, 10)
-uint8_t_static_out_helper(abtGB, 10)
+uint8_t_static_out_helper(abtGB, 48)
 
 uint8_t_static_out_helper(abtAtqa, 2)
 uint8_t_static_out_helper(abtUid, 10)
@@ -30,25 +31,25 @@ uint8_t_static_out_helper(abtAts, 254)
 
 %define uint8_t_static_in_helper(name, size)
 %typemap(in) uint8_t name[size] %{
-int len = PySequence_Size($input);
 uint8_t * vs = (uint8_t *)fromPyBytes($input);
-int max_len = size;
-if (len <size)
-    max_len = len;
+if (!vs)
+    SWIG_exception(SWIG_RuntimeError, "could not convert array argument");
+int len = PySequence_Size($input);
+if (len > size)
+    SWIG_exception(SWIG_RuntimeError, "expected at most size elements in array argument");
 uint8_t res[size];
-if (vs) {
-  int i;
-  for (i = 0; i < max_len; ++i) {
-    res[i] = vs[i];
-  }
-  $1 = res;
-}
+
+memcpy(res, vs, len < size ? len : size);
+$1 = res;
+%}
+%typemap(memberin) uint8_t name[size] %{
+memcpy($1, $input, size * sizeof(uint8_t));
 %}
 %enddef
 
 // nfc_dep_info
-uint8_t_static_in_helper(abtNFCID3, 10)
 uint8_t_static_in_helper(abtGB, 48)
+uint8_t_static_in_helper(abtNFCID3, 10)
 
 // nfc_iso14443a_info
 uint8_t_static_in_helper(abtUid, 10)
