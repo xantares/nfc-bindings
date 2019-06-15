@@ -6,7 +6,7 @@ list (APPEND CMAKE_SWIG_FLAGS "-ignoremissing")
 separate_arguments (CMAKE_SWIG_FLAGS)
 
 find_package (PythonInterp)
-find_package (PythonLibs)
+find_package (PythonLibs ${PYTHON_VERSION_STRING} EXACT)
 
 if (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
   include_directories (${PYTHON_INCLUDE_DIRS})
