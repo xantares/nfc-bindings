@@ -35,17 +35,23 @@ uint8_t * vs = (uint8_t *)fromPyBytes($input);
 int max_len = size;
 if (len <size)
     max_len = len;
+uint8_t res[size];
 if (vs) {
   int i;
   for (i = 0; i < max_len; ++i) {
-    $1[i] = vs[i];
+    res[i] = vs[i];
   }
+  $1 = res;
 }
 %}
 %enddef
 
+// nfc_dep_info
 uint8_t_static_in_helper(abtNFCID3, 10)
 uint8_t_static_in_helper(abtGB, 48)
+
+// nfc_iso14443a_info
+uint8_t_static_in_helper(abtUid, 10)
 
 %typemap(typecheck,precedence=SWIG_TYPECHECK_INTEGER) uint8_t * {
   $1 = checkPyBytes($input) || (checkPyInt($input) && (PyLong_AsUnsignedLong($input)==0))
