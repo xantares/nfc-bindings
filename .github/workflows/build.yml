@@ -11,7 +11,8 @@ jobs:
         run: |
           sudo apt-get install libusb-dev libpcsclite-dev python3-dev swig cmake
           curl -L https://github.com/nfc-tools/libnfc/releases/download/libnfc-1.8.0/libnfc-1.8.0.tar.bz2 | tar xj
-          cd libnfc-1.8.0 && cmake . && make -j4 && sudo make install && cd -
+          cd libnfc-1.8.0 && cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_EXAMPLES=OFF -DBUILD_UTILS=OFF . && make -j4 && sudo make install && cd -
           cmake -DCMAKE_INSTALL_PREFIX=~/.local . && make install
+          python -c "import nfc; print(nfc.__version__)"
       
       
