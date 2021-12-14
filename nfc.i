@@ -312,9 +312,12 @@ ant : array of nfc_target
   PyObject * ant = PyList_New(result);
   int i;
   for(i = 0; i < result; ++i) {
-    PyObject * target = SWIG_NewPointerObj(&($1[i]),$descriptor,0);
+    nfc_target *trg_copy = malloc(sizeof(nfc_target));
+    memcpy(trg_copy, &($1[i]), sizeof(nfc_target));
+    PyObject * target = SWIG_NewPointerObj(trg_copy,$descriptor,SWIG_POINTER_OWN);
     PyList_SetItem( ant, i, target );
   }
+  free($1);
   $result = SWIG_Python_AppendOutput($result, ant);
 %}
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
