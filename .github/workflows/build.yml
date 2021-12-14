@@ -1,0 +1,16 @@
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+      apt-get install libusb-dev libpcsclite-dev python3-dev swig cmake
+      curl -L https://github.com/nfc-tools/libnfc/releases/download/libnfc-1.8.0/libnfc-1.8.0.tar.bz2 | tar xj
+      cd libnfc-1.8.0 && cmake . && make -j4 && sudo make install && cd -
+      cmake -DCMAKE_INSTALL_PREFIX=~/.local . && make install
+      
+      

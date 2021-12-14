@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/xantares/nfc-bindings.svg?branch=master)](https://travis-ci.org/xantares/nfc-bindings)
+[![Build Status](https://github.com/xantares/nfc-bindings/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/xantares/nfc-bindings/actions/workflows/build.yml)
 
 nfc-bindings
 ============
