@@ -11,7 +11,6 @@ if (POLICY CMP0086)
   cmake_policy (SET CMP0086 NEW)
 endif ()
 
-option (INSTALL_EXAMPLES "install examples" ON)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 find_package (LibNFC 1.7.1 REQUIRED)
@@ -27,18 +26,7 @@ endif ()
 
 include (TargetLinkLibrariesWithDynamicLookup)
 
-# workaround for cmake bug #0013449
-if (CMAKE_VERSION VERSION_LESS 3 AND DEFINED CMAKE_FIND_ROOT_PATH)
-  find_program (SWIG_EXECUTABLE NAMES swig2.0 swig)
-  if (SWIG_EXECUTABLE)
-    set (SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake)
-    set (SWIG_FOUND TRUE)
-  else ()
-    message (SEND_ERROR "SWIG not found")
-  endif ()
-else ()
-  find_package (SWIG REQUIRED)
-endif ()
+find_package (SWIG REQUIRED)
 include (${SWIG_USE_FILE})
 
 
