@@ -44,7 +44,7 @@ Example
     context = nfc.init()
     pnd = nfc.open(context)
     if pnd is not None:
-        if nfc.initiator_init(pnd) < 0:
+        if nfc.initiator_init(pnd) == 0:
             print('NFC reader: %s opened' % nfc.device_get_name(pnd))
     nfc.close(pnd)
     nfc.exit(context)
