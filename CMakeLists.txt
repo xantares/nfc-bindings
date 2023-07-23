@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.2)
+cmake_minimum_required (VERSION 3.8)
 
 set (CMAKE_BUILD_TYPE Release CACHE STRING "build type")
 
@@ -13,22 +13,13 @@ endif ()
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-find_package (LibNFC 1.7.1 REQUIRED)
+find_package (LibNFC 1.7.2 REQUIRED)
 include_directories (${LIBNFC_INCLUDE_DIRS})
-
-# https://github.com/nfc-tools/libnfc/pull/297
-include (CheckSymbolExists)
-set (CMAKE_REQUIRED_LIBRARIES ${LIBNFC_LIBRARIES})
-check_symbol_exists (iso14443b_crc nfc/nfc.h HAS_ISO14443B_CRC)
-if (NOT HAS_ISO14443B_CRC)
-  add_definitions(-DNO_ISO14443B_CRC)
-endif ()
-
-include (TargetLinkLibrariesWithDynamicLookup)
 
 find_package (SWIG REQUIRED)
 include (${SWIG_USE_FILE})
 
+include (GNUInstallDirs)
 
 option (BUILD_PYTHON "Build python bindings" ON)
 if (BUILD_PYTHON)
