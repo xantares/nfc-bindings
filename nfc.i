@@ -8,12 +8,12 @@
 #include "python_wrapping.h"
 
 #if SWIG_VERSION >= 0x040300
-inline PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
+static PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
 {
 return SWIG_Python_AppendOutput(result, obj, 0);
 }
 #else
-inline PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
+static PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
 {
   return SWIG_Python_AppendOutput(result, obj);
 }
