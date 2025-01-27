@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.13)
 
 set (CMAKE_BUILD_TYPE Release CACHE STRING "build type")
 
@@ -13,10 +13,10 @@ endif ()
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-find_package (LibNFC 1.7.2 REQUIRED)
+find_package (LibNFC 1.8 REQUIRED)
 include_directories (${LIBNFC_INCLUDE_DIRS})
 
-find_package (SWIG REQUIRED)
+find_package (SWIG 3 REQUIRED)
 include (${SWIG_USE_FILE})
 
 include (GNUInstallDirs)

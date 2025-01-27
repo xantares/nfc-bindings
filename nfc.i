@@ -6,6 +6,18 @@
 #include <stdbool.h>
 
 #include "python_wrapping.h"
+
+#if SWIG_VERSION >= 0x040300
+inline PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
+{
+return SWIG_Python_AppendOutput(result, obj, 0);
+}
+#else
+inline PyObject* NFC_Python_AppendOutput(PyObject* result, PyObject* obj)
+{
+  return SWIG_Python_AppendOutput(result, obj);
+}
+#endif
 %}
 
 %include <typemaps.i>
@@ -79,7 +91,7 @@ context : nfc_context
 %feature("autodoc", nfc_init_doc) nfc_init;
 //%newobject nfc_init;
 %typemap(in,numinputs=0) SWIGTYPE** OUTPUT ($*ltype temp) %{ $1 = &temp; %}
-%typemap(argout) SWIGTYPE** OUTPUT %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1,$*descriptor,0)); %}
+%typemap(argout) SWIGTYPE** OUTPUT %{ $result = NFC_Python_AppendOutput($result, SWIG_NewPointerObj(*$1,$*descriptor,0)); %}
 %apply SWIGTYPE** OUTPUT { nfc_context **context };
 void nfc_init(nfc_context **context);
 %clear nfc_context **context;
@@ -318,7 +330,7 @@ ant : array of nfc_target
     PyList_SetItem( ant, i, target );
   }
   free($1);
-  $result = SWIG_Python_AppendOutput($result, ant);
+  $result = NFC_Python_AppendOutput($result, ant);
 %}
 int nfc_initiator_list_passive_targets(nfc_device *pnd, const nfc_modulation nm, nfc_target ant[], const size_t szTargets);
 
@@ -473,7 +485,7 @@ pbtRx : bytes
 %typemap(argout) (uint8_t *pbtRx, const size_t szRx) %{
 if (result<0)
   $2=0;
-$result = SWIG_Python_AppendOutput($result, PyByteArray_FromStringAndSize((char *)$1, $2)); free($1);
+$result = NFC_Python_AppendOutput($result, PyByteArray_FromStringAndSize((char *)$1, $2)); free($1);
 %}
 int nfc_initiator_transceive_bytes(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTx, uint8_t *pbtRx, const size_t szRx, int timeout);
 
@@ -539,7 +551,7 @@ cycles : int
 %enddef
 %feature("autodoc", nfc_initiator_transceive_bytes_timed_doc) nfc_initiator_transceive_bytes_timed;
 %typemap(in,numinputs=0) uint32_t *cycles ($*ltype temp) %{ temp = 0; $1 = &temp; %}
-%typemap(argout) uint32_t *cycles %{ $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(*$1,$*descriptor,0)); %}
+%typemap(argout) uint32_t *cycles %{ $result = NFC_Python_AppendOutput($result, SWIG_NewPointerObj($1, $*descriptor, 0)); %}
 int nfc_initiator_transceive_bytes_timed(nfc_device *pnd, const uint8_t *pbtTx, const size_t szTxBits, uint8_t *pbtRx, const size_t szRx, uint32_t *cycles);
 
 
@@ -840,9 +852,8 @@ supported_mt : nfc_modulation_type array
 "
 %enddef
 %feature("autodoc", nfc_device_get_supported_modulation_doc) nfc_device_get_supported_modulation;
-int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode,  const nfc_modulation_type **const supported_mt);
-
-
+// int nfc_device_get_supported_modulation(nfc_device *pnd, const nfc_mode mode, const nfc_modulation_type **const supported_mt);
+%ignore nfc_device_get_supported_modulation;
 
 
 %define nfc_device_get_supported_baud_rate_doc
@@ -858,14 +869,39 @@ nmt : nfc_modulation_type
 Returns
 -------
 ret : integer
-    0 on success, otherwise returns libnfc's error code (negative value) 
+    0 on success, otherwise returns libnfc's error code (negative value)
 supported_br : nfc_modulation_type array
     supported baud rates
 "
 %enddef
 %feature("autodoc", nfc_device_get_supported_baud_rate_doc) nfc_device_get_supported_baud_rate;
-int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
+//int nfc_device_get_supported_baud_rate(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
+%ignore nfc_device_get_supported_baud_rate;
 
+
+
+
+%define nfc_device_get_supported_baud_rate_target_mode_doc
+"Get supported baud rates.
+
+Parameters
+----------
+pnd : nfc_device
+    currently used device
+nmt : nfc_modulation_type
+    desired modulation
+
+Returns
+-------
+ret : integer
+    0 on success, otherwise returns libnfc's error code (negative value)
+supported_br : nfc_modulation_type array
+    supported baud rates
+"
+%enddef
+%feature("autodoc", nfc_device_get_supported_baud_rate_target_mode_doc) nfc_device_get_supported_baud_rate_target_mode;
+//int nfc_device_get_supported_baud_rate_target_mode(nfc_device *pnd, const nfc_modulation_type nmt, const nfc_baud_rate **const supported_br);
+%ignore nfc_device_get_supported_baud_rate_target_mode;
 
 
 
@@ -1074,7 +1110,7 @@ buf : string
 %enddef
 %feature("autodoc", str_nfc_target_doc) str_nfc_target;
 %typemap(in,numinputs=0) char **buf ($*ltype temp) %{ $1 = &temp; %}
-%typemap(argout) char **buf %{ $result = SWIG_Python_AppendOutput($result, toPyString(*$1)); %}
+%typemap(argout) char **buf %{ $result = NFC_Python_AppendOutput($result, toPyString(*$1)); %}
 int str_nfc_target(char **buf, const nfc_target *pnt, bool verbose);
 %clear char **buf;
 
