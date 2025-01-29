@@ -968,13 +968,6 @@ void iso14443a_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 void iso14443a_crc_append(uint8_t *pbtData, size_t szLen);
 
 
-#ifdef NO_ISO14443B_CRC
-
-%ignore iso14443b_crc;
-%ignore iso14443b_crc_append;
-
-#else
-
 %define iso14443b_crc_doc
 "iso14443b_crc(pbtData, szLen, pbtCrc)"
 %enddef
@@ -987,8 +980,6 @@ void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc);
 %enddef
 %feature("autodoc", iso14443b_crc_append_doc) iso14443b_crc_append;
 void iso14443b_crc_append(uint8_t *pbtData, size_t szLen);
-
-#endif
 
 
 %define iso14443a_locate_historical_bytes_doc
@@ -1125,11 +1116,6 @@ int str_nfc_target(char **buf, const nfc_target *pnt, bool verbose);
 %include nfc/nfc.h
 %{
 #include <nfc/nfc.h>
-
-#ifdef NO_ISO14443B_CRC
-void iso14443b_crc(uint8_t *pbtData, size_t szLen, uint8_t *pbtCrc) {}
-void iso14443b_crc_append(uint8_t *pbtData, size_t szLen) {}
-#endif
 %}
 
 %pythoncode %{
