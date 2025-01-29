@@ -8,17 +8,15 @@ Introduction
 
 The project goal is to provide scripting language bindings for libnfc (http://www.libnfc.org/) through swig.
 
-For now only Python bindings are supported (2.x and 3.x), with full docstrings.
-
-Alternative Python bindings are provided by PyNFC (https://github.com/ikelos/pynfc), which is somewhat higher-level, while the API does not seem to be fully covered.
+For now only Python bindings are supported with full docstrings.
 
 Requirements
 ------------
 
-  * libnfc >= 1.7.1
-  * cmake
-  * swig
-  * python
+  * libnfc >= 1.8
+  * CMake
+  * SWIG
+  * Python
 
 Quickstart
 ----------
@@ -29,17 +27,9 @@ Quickstart
     make install
     python python/examples/quick_start_example.py
 
-Specify Python stack
---------------------
-
-To manually choose the Python libraries other than the default, you can specify the locations of the interpreter, library and include dir, eg:
-
-    cmake -DPYTHON_EXECUTABLE=/usr/bin/python3 -DPYTHON_LIBRARY=/usr/lib/libpython3.so -DPYTHON_INCLUDE_DIR=/usr/include/python3.6 .
-
 Example
 -------
 
-    from __future__ import print_function
     import nfc
     context = nfc.init()
     pnd = nfc.open(context)
